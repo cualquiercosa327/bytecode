@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <assert.h>
 
-#define LIST_OF_VALUE_TYPES \
+#define LIST_OF_VALUE_KINDS \
     X(Value_S64),\
     X(Value_S32),\
     X(Value_S16),\
@@ -18,23 +18,23 @@
     X(Value_Pointer),\
     X(Value_Count)
 
-enum value_type
+enum bytecode_value_kind
 {
 #define X(name) name
-    LIST_OF_VALUE_TYPES
+    LIST_OF_VALUE_KINDS
 #undef X
 };
 
-static const char *value_type_str[] =
+static const char *bytecode_value_kind_str[] =
 {
 #define X(name) #name
-    LIST_OF_VALUE_TYPES
+    LIST_OF_VALUE_KINDS
 #undef X
 };
 
-struct value
+struct bytecode_value
 {
-    enum value_type type;
+    enum bytecode_value_kind kind;
     union {
         int64_t  _s64;
         int32_t  _s32;
@@ -53,18 +53,18 @@ struct value
     };
 };
 
-struct value create_s64_constant(uint64_t s64)
+struct bytecode_value create_s64_constant(uint64_t s64)
 {
-    struct value result;
-    result.type = Value_S64;
+    struct bytecode_value result;
+    result.kind = Value_S64;
     result._s64 = (int64_t)(*(int64_t *)&s64);
     return result;
 }
 
-struct value create_f32_constant(uint64_t f32)
+struct bytecode_value create_f32_constant(uint64_t f32)
 {
-    struct value result;
-    result.type = Value_Float32;
+    struct bytecode_value result;
+    result.kind = Value_Float32;
     result._f32 = (float)(*(float *)&f32);
     return result;
 }
@@ -104,7 +104,7 @@ struct bytecode_runner
     uint64_t *text;
     uint32_t stack_head;
     uint32_t stack_size;
-    struct value *stack;
+    struct bytecode_value *stack;
 
     uint64_t reg[BYTECODE_REGISTER_COUNT];
 };
@@ -113,7 +113,7 @@ void bytecode_runner_init(struct bytecode_runner *bcr, uint64_t *program)
 {
     bcr->stack_head = 0;
     bcr->stack_size = 200;
-    bcr->stack = malloc(bcr->stack_size * sizeof(struct value));
+    bcr->stack = malloc(bcr->stack_size * sizeof(struct bytecode_value));
 
     bcr->text = program;
     bcr->is_running = true;
@@ -133,13 +133,13 @@ struct bytecode_instruction decode_instruction(uint64_t raw_instr)
     return instr;
 }
 
-void push_stack(struct bytecode_runner *bcr, struct value value)
+void push_stack(struct bytecode_runner *bcr, struct bytecode_value value)
 {
     bcr->stack[bcr->stack_head++] = value;
     assert(bcr->stack_head < bcr->stack_size);
 }
 
-struct value pop_stack(struct bytecode_runner *bcr)
+struct bytecode_value pop_stack(struct bytecode_runner *bcr)
 {
     assert(bcr->stack_head > 0);
     return bcr->stack[--bcr->stack_head];
@@ -162,28 +162,28 @@ void do_cycle(struct bytecode_runner *bcr)
 
     case PUSH_INT: {
         uint64_t constant = fetch_instruction(bcr);
-        struct value s64_constant = create_s64_constant(constant);
+        struct bytecode_value s64_constant = create_s64_constant(constant);
         push_stack(bcr, s64_constant);
     } break;
 
     case PUSH_FLOAT: {
         uint64_t constant = fetch_instruction(bcr);
-        struct value f32_constant = create_f32_constant(constant);
+        struct bytecode_value f32_constant = create_f32_constant(constant);
         push_stack(bcr, f32_constant);
     } break;
 
     case ADD_INT_IMM: {
-        struct value rhs = pop_stack(bcr);
-        struct value lhs = pop_stack(bcr);
-        assert(lhs.type == rhs.type);
+        struct bytecode_value rhs = pop_stack(bcr);
+        struct bytecode_value lhs = pop_stack(bcr);
+        assert(lhs.kind == rhs.kind);
         lhs._s64 += rhs._s64;
         push_stack(bcr, lhs);
     } break;
 
     case ADD_FLOAT_IMM: {
-        struct value rhs = pop_stack(bcr);
-        struct value lhs = pop_stack(bcr);
-        assert(lhs.type == rhs.type);
+        struct bytecode_value rhs = pop_stack(bcr);
+        struct bytecode_value lhs = pop_stack(bcr);
+        assert(lhs.kind == rhs.kind);
         lhs._f32 += rhs._f32;
         push_stack(bcr, lhs);
     } break;
@@ -234,10 +234,10 @@ int main(int argc, char **argv)
         do_cycle(&bcr);
     }
 
-    struct value fval = pop_stack(&bcr);
+    struct bytecode_value fval = pop_stack(&bcr);
     printf("head = %.2f\n", fval._f32);
 
-    struct value ival = pop_stack(&bcr);
+    struct bytecode_value ival = pop_stack(&bcr);
     printf("head = %ld\n", ival._s64);
 
     return 0;
