@@ -80,6 +80,16 @@ enum bytecode_opcode
     ADD_FLOAT_IMM  = 0x30,
 };
 
+enum bytecode_register
+{
+    RIP,
+
+    RAX, RBX, RCX, RDX, RBP, RSP, RSI, RDI,
+    R8, R9, R10, R11, R12, R13, R14, R15,
+
+    BYTECODE_REGISTER_COUNT
+};
+
 struct bytecode_instruction
 {
     uint8_t op;
@@ -89,13 +99,14 @@ struct bytecode_instruction
 
 struct bytecode_runner
 {
-    int  ip;
     bool is_running;
 
     uint64_t *text;
     uint32_t stack_head;
     uint32_t stack_size;
     struct value *stack;
+
+    uint64_t reg[BYTECODE_REGISTER_COUNT];
 };
 
 void bytecode_runner_init(struct bytecode_runner *bcr, uint64_t *program)
@@ -110,7 +121,7 @@ void bytecode_runner_init(struct bytecode_runner *bcr, uint64_t *program)
 
 uint64_t fetch_instruction(struct bytecode_runner *bcr)
 {
-    return bcr->text[bcr->ip++];
+    return bcr->text[bcr->reg[RIP]++];
 }
 
 struct bytecode_instruction decode_instruction(uint64_t raw_instr)
@@ -200,8 +211,9 @@ uint64_t encode_instruction_r2(uint8_t instr, uint8_t r1, uint8_t r2)
 
 int main(int argc, char **argv)
 {
-    float a   = 22.3f;
-    float b   =  3.2f;
+    float a = 22.3f;
+    float b =  3.2f;
+
     int64_t c = 0x1234567890abcdef;
     int64_t d = 0x1234567890abcdef;
 
