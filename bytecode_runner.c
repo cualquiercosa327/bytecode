@@ -187,6 +187,7 @@ struct bytecode_instruction
 struct bytecode_runner
 {
     bool is_running;
+    uint64_t cycle_count;
 
     uint64_t *text;
     uint32_t stack_head;
@@ -205,6 +206,7 @@ void bytecode_runner_init(struct bytecode_runner *bcr, uint64_t *program)
     bcr->reg[BYTECODE_REGISTER_RIP] = create_u64_constant(0);
 
     bcr->text = program;
+    bcr->cycle_count = 0;
     bcr->is_running = true;
 }
 
@@ -236,12 +238,11 @@ struct bytecode_value pop_stack(struct bytecode_runner *bcr)
 
 void do_cycle(struct bytecode_runner *bcr)
 {
-    static uint64_t cycle_count = 0;
     uint64_t raw_instr = fetch_instruction(bcr);
     struct bytecode_instruction instr = decode_instruction(raw_instr);
 
     printf("cycle %3lld: op = %2X, r1 = %2d, r2 = %2d\n",
-            ++cycle_count, instr.op, instr.r1, instr.r2);
+            ++bcr->cycle_count, instr.op, instr.r1, instr.r2);
 
     switch (instr.op) {
 
