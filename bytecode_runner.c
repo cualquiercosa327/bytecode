@@ -243,7 +243,7 @@ void do_cycle(struct bytecode_runner *bcr)
     uint64_t raw_instr = fetch_instruction(bcr);
     struct bytecode_instruction instr = decode_instruction(raw_instr);
 
-    printf("cycle %3ld: op = %2X, r1 = %2d, r2 = %2d\n",
+    printf("cycle %3lld: op = %2X, r1 = %2d, r2 = %2d\n",
             ++cycle_count, instr.op, instr.r1, instr.r2);
 
     switch (instr.op) {
@@ -330,7 +330,7 @@ int main(int argc, char **argv)
     printf("head = %.2f\n", fval._f32);
 
     struct bytecode_value ival = pop_stack(&bcr);
-    printf("head = %ld\n", ival._s64);
+    printf("head = %lld\n", ival._s64);
 
     return 0;
 }
