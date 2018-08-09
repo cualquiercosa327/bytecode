@@ -202,10 +202,7 @@ void bytecode_runner_init(struct bytecode_runner *bcr, uint64_t *program)
     bcr->stack_size = 200;
     bcr->stack = malloc(bcr->stack_size * sizeof(struct bytecode_value));
 
-    bcr->reg[BYTECODE_REGISTER_RIP] = (struct bytecode_value) {
-        .kind = Bytecode_Value_U64,
-        ._u64 = 0
-    };
+    bcr->reg[BYTECODE_REGISTER_RIP] = create_u64_constant(0);
 
     bcr->text = program;
     bcr->is_running = true;
