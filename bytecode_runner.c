@@ -5,18 +5,18 @@
 #include <assert.h>
 
 #define LIST_OF_VALUE_KINDS \
-    X(Value_S64),\
-    X(Value_S32),\
-    X(Value_S16),\
-    X(Value_S8),\
-    X(Value_U64),\
-    X(Value_U32),\
-    X(Value_U16),\
-    X(Value_U8),\
-    X(Value_Float64),\
-    X(Value_Float32),\
-    X(Value_Pointer),\
-    X(Value_Count)
+    X(Bytecode_Value_S64),\
+    X(Bytecode_Value_S32),\
+    X(Bytecode_Value_S16),\
+    X(Bytecode_Value_S8),\
+    X(Bytecode_Value_U64),\
+    X(Bytecode_Value_U32),\
+    X(Bytecode_Value_U16),\
+    X(Bytecode_Value_U8),\
+    X(Bytecode_Value_Float64),\
+    X(Bytecode_Value_Float32),\
+    X(Bytecode_Value_Pointer),\
+    X(Bytecode_Value_Count)
 
 enum bytecode_value_kind
 {
@@ -56,7 +56,7 @@ struct bytecode_value
 struct bytecode_value create_s64_constant(uint64_t s64)
 {
     struct bytecode_value result;
-    result.kind = Value_S64;
+    result.kind = Bytecode_Value_S64;
     result._s64 = (int64_t)(*(int64_t *)&s64);
     return result;
 }
@@ -64,7 +64,7 @@ struct bytecode_value create_s64_constant(uint64_t s64)
 struct bytecode_value create_f32_constant(uint64_t f32)
 {
     struct bytecode_value result;
-    result.kind = Value_Float32;
+    result.kind = Bytecode_Value_Float32;
     result._f32 = (float)(*(float *)&f32);
     return result;
 }
@@ -82,10 +82,25 @@ enum bytecode_opcode
 
 enum bytecode_register
 {
-    RIP,
+    BYTECODE_REGISTER_RIP,
 
-    RAX, RBX, RCX, RDX, RBP, RSP, RSI, RDI,
-    R8, R9, R10, R11, R12, R13, R14, R15,
+    BYTECODE_REGISTER_RAX,
+    BYTECODE_REGISTER_RBX,
+    BYTECODE_REGISTER_RCX,
+    BYTECODE_REGISTER_RDX,
+    BYTECODE_REGISTER_RBP,
+    BYTECODE_REGISTER_RSP,
+    BYTECODE_REGISTER_RSI,
+    BYTECODE_REGISTER_RDI,
+
+    BYTECODE_REGISTER_R8,
+    BYTECODE_REGISTER_R9,
+    BYTECODE_REGISTER_R10,
+    BYTECODE_REGISTER_R11,
+    BYTECODE_REGISTER_R12,
+    BYTECODE_REGISTER_R13,
+    BYTECODE_REGISTER_R14,
+    BYTECODE_REGISTER_R15,
 
     BYTECODE_REGISTER_COUNT
 };
@@ -106,7 +121,7 @@ struct bytecode_runner
     uint32_t stack_size;
     struct bytecode_value *stack;
 
-    uint64_t reg[BYTECODE_REGISTER_COUNT];
+    struct bytecode_value reg[BYTECODE_REGISTER_COUNT];
 };
 
 void bytecode_runner_init(struct bytecode_runner *bcr, uint64_t *program)
@@ -115,13 +130,18 @@ void bytecode_runner_init(struct bytecode_runner *bcr, uint64_t *program)
     bcr->stack_size = 200;
     bcr->stack = malloc(bcr->stack_size * sizeof(struct bytecode_value));
 
+    bcr->reg[BYTECODE_REGISTER_RIP] = (struct bytecode_value) {
+        .kind = Bytecode_Value_U64,
+        ._u64 = 0
+    };
+
     bcr->text = program;
     bcr->is_running = true;
 }
 
 uint64_t fetch_instruction(struct bytecode_runner *bcr)
 {
-    return bcr->text[bcr->reg[RIP]++];
+    return bcr->text[bcr->reg[BYTECODE_REGISTER_RIP]._u64++];
 }
 
 struct bytecode_instruction decode_instruction(uint64_t raw_instr)
