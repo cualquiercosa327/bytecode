@@ -1,21 +1,23 @@
 #ifndef BYTECODE_VALUE_H
 #define BYTECODE_VALUE_H
 
+#include <stdio.h>
 #include <stdint.h>
+#include <inttypes.h>
 
 #define LIST_OF_VALUE_KINDS \
-    X(Bytecode_Value_S64),\
-    X(Bytecode_Value_S32),\
-    X(Bytecode_Value_S16),\
-    X(Bytecode_Value_S8),\
-    X(Bytecode_Value_U64),\
-    X(Bytecode_Value_U32),\
-    X(Bytecode_Value_U16),\
-    X(Bytecode_Value_U8),\
-    X(Bytecode_Value_Float64),\
-    X(Bytecode_Value_Float32),\
-    X(Bytecode_Value_Pointer),\
-    X(Bytecode_Value_Count)
+    X(BYTECODE_VALUE_S64),\
+    X(BYTECODE_VALUE_S32),\
+    X(BYTECODE_VALUE_S16),\
+    X(BYTECODE_VALUE_S8),\
+    X(BYTECODE_VALUE_U64),\
+    X(BYTECODE_VALUE_U32),\
+    X(BYTECODE_VALUE_U16),\
+    X(BYTECODE_VALUE_U8),\
+    X(BYTECODE_VALUE_F64),\
+    X(BYTECODE_VALUE_F32),\
+    X(BYTECODE_VALUE_POINTER),\
+    X(BYTECODE_VALUE_COUNT)
 
 enum bytecode_value_kind
 {
@@ -66,5 +68,7 @@ struct bytecode_value create_f64_constant(uint64_t f64);
 struct bytecode_value create_f32_constant(uint64_t f32);
 
 struct bytecode_value create_ptr_constant(uint64_t ptr);
+
+void print_bytecode_value(struct bytecode_value *value, FILE *stream);
 
 #endif

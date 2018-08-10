@@ -14,19 +14,14 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
-#include <inttypes.h>
 
 void bytecode_runner_init(struct bytecode_runner *bcr, uint64_t *program)
 {
+    bcr->cycle_count = 0;
     bcr->stack_head = 0;
     bcr->stack_size = 200;
     bcr->stack = malloc(bcr->stack_size * sizeof(struct bytecode_value));
-
     bcr->reg[BYTECODE_REGISTER_RIP] = create_u64_constant(0);
-
-    bcr->text = program;
-    bcr->cycle_count = 0;
-    bcr->is_running = true;
 }
 
 void bytecode_runner_destroy(struct bytecode_runner *bcr)
@@ -35,32 +30,37 @@ void bytecode_runner_destroy(struct bytecode_runner *bcr)
     memset(bcr, 0, sizeof(struct bytecode_runner));
 }
 
+void bytecode_runner_run(struct bytecode_runner *bcr, uint64_t *program)
+{
+    bcr->text = program;
+    bcr->is_running = true;
+
+    while (bcr->is_running) {
+        uint64_t raw_instr = fetch_instruction(bcr);
+        struct bytecode_instruction instr = decode_instruction(raw_instr);
+
+        printf("cycle %3" PRIu64 ": op = %2X, r1 = %2d, r2 = %2d\n",
+                ++bcr->cycle_count, instr.op, instr.r1, instr.r2);
+
+        execute_instruction(bcr, instr);
+    }
+}
+
 struct bytecode_value bytecode_runner_result(struct bytecode_runner *bcr)
 {
     return bcr->reg[BYTECODE_REGISTER_RAX];
 }
 
-void push_stack(struct bytecode_runner *bcr, struct bytecode_value value)
+void bytecode_runner_push_stack(struct bytecode_runner *bcr, struct bytecode_value value)
 {
     bcr->stack[bcr->stack_head++] = value;
     assert(bcr->stack_head < bcr->stack_size);
 }
 
-struct bytecode_value pop_stack(struct bytecode_runner *bcr)
+struct bytecode_value bytecode_runner_pop_stack(struct bytecode_runner *bcr)
 {
     assert(bcr->stack_head > 0);
     return bcr->stack[--bcr->stack_head];
-}
-
-void do_cycle(struct bytecode_runner *bcr)
-{
-    uint64_t raw_instr = fetch_instruction(bcr);
-    struct bytecode_instruction instr = decode_instruction(raw_instr);
-
-    printf("cycle %3" PRIu64 ": op = %2X, r1 = %2d, r2 = %2d\n",
-            ++bcr->cycle_count, instr.op, instr.r1, instr.r2);
-
-    execute_instruction(bcr, instr);
 }
 
 int main(int argc, char **argv)
@@ -83,18 +83,21 @@ int main(int argc, char **argv)
 
     struct bytecode_runner bcr = {};
     bytecode_runner_init(&bcr, program);
-
-    while (bcr.is_running) {
-        do_cycle(&bcr);
-    }
-
-    struct bytecode_value fval = pop_stack(&bcr);
-    printf("head = %.2f\n", fval._f32);
-
-    struct bytecode_value ival = pop_stack(&bcr);
-    printf("head = %" PRId64 "\n", ival._s64);
-
+    bytecode_runner_run(&bcr, program);
+    struct bytecode_value result = bytecode_runner_result(&bcr);
+    struct bytecode_value fval = bytecode_runner_pop_stack(&bcr);
+    struct bytecode_value ival = bytecode_runner_pop_stack(&bcr);
     bytecode_runner_destroy(&bcr);
+
+    print_bytecode_value(&fval, stdout);
+    printf("\n");
+
+    print_bytecode_value(&ival, stdout);
+    printf("\n");
+
+    printf("result = ");
+    print_bytecode_value(&result, stdout);
+    printf("\n");
 
     return 0;
 }

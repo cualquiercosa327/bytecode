@@ -46,10 +46,11 @@ struct bytecode_runner
 
 void bytecode_runner_init(struct bytecode_runner *bcr, uint64_t *program);
 void bytecode_runner_destroy(struct bytecode_runner *bcr);
+
+void bytecode_runner_run(struct bytecode_runner *bcr, uint64_t *program);
 struct bytecode_value bytecode_runner_result(struct bytecode_runner *bcr);
 
-void push_stack(struct bytecode_runner *bcr, struct bytecode_value value);
-struct bytecode_value pop_stack(struct bytecode_runner *bcr);
-void do_cycle(struct bytecode_runner *bcr);
+void bytecode_runner_push_stack(struct bytecode_runner *bcr, struct bytecode_value value);
+struct bytecode_value bytecode_runner_pop_stack(struct bytecode_runner *bcr);
 
 #endif
