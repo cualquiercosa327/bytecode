@@ -11,6 +11,8 @@ static bytecode_instruction_handler *instruction_handlers[BYTECODE_OPCODE_COUNT]
     [BYTECODE_OPCODE_PUSH_FLOAT]    = exec_op_push_float,
     [BYTECODE_OPCODE_ADD_INT_IMM]   = exec_op_add_int_imm,
     [BYTECODE_OPCODE_ADD_FLOAT_IMM] = exec_op_add_float_imm,
+    [BYTECODE_OPCODE_PUSH_REG]      = exec_op_push_reg,
+    [BYTECODE_OPCODE_POP_REG]       = exec_op_pop_reg,
 };
 
 void execute_instruction(struct bytecode_runner *bcr, struct bytecode_instruction instr)

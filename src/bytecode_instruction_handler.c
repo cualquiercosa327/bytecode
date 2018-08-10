@@ -40,3 +40,13 @@ bytecode_instruction_handler_(exec_op_add_float_imm)
     lhs._f32 += rhs._f32;
     bytecode_runner_push_stack(bcr, lhs);
 }
+
+bytecode_instruction_handler_(exec_op_push_reg)
+{
+    bytecode_runner_push_stack(bcr, bcr->reg[reg1]);
+}
+
+bytecode_instruction_handler_(exec_op_pop_reg)
+{
+    bcr->reg[reg1] = bytecode_runner_pop_stack(bcr);
+}

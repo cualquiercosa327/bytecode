@@ -8,5 +8,7 @@ bytecode_instruction_handler_(exec_op_push_int);
 bytecode_instruction_handler_(exec_op_push_float);
 bytecode_instruction_handler_(exec_op_add_int_imm);
 bytecode_instruction_handler_(exec_op_add_float_imm);
+bytecode_instruction_handler_(exec_op_push_reg);
+bytecode_instruction_handler_(exec_op_pop_reg);
 
 #endif

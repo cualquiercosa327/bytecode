@@ -75,6 +75,7 @@ int main(int argc, char **argv)
         encode_instruction(BYTECODE_OPCODE_PUSH_INT), c,
         encode_instruction(BYTECODE_OPCODE_PUSH_INT), d,
         encode_instruction(BYTECODE_OPCODE_ADD_INT_IMM),
+        encode_instruction_r1(BYTECODE_OPCODE_POP_REG, BYTECODE_REGISTER_RAX),
         encode_instruction(BYTECODE_OPCODE_PUSH_FLOAT), (uint64_t)(*(uint64_t *)&a),
         encode_instruction(BYTECODE_OPCODE_PUSH_FLOAT), (uint64_t)(*(uint64_t *)&b),
         encode_instruction(BYTECODE_OPCODE_ADD_FLOAT_IMM),
@@ -86,13 +87,9 @@ int main(int argc, char **argv)
     bytecode_runner_run(&bcr, program);
     struct bytecode_value result = bytecode_runner_result(&bcr);
     struct bytecode_value fval = bytecode_runner_pop_stack(&bcr);
-    struct bytecode_value ival = bytecode_runner_pop_stack(&bcr);
     bytecode_runner_destroy(&bcr);
 
     print_bytecode_value(&fval, stdout);
-    printf("\n");
-
-    print_bytecode_value(&ival, stdout);
     printf("\n");
 
     printf("result = ");
