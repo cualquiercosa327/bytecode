@@ -37,7 +37,6 @@ struct bytecode_runner
     uint64_t cycle_count;
 
     uint64_t *text;
-    uint32_t stack_head;
     uint32_t stack_size;
     struct bytecode_value *stack;
 

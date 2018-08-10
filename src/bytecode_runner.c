@@ -18,10 +18,10 @@
 void bytecode_runner_init(struct bytecode_runner *bcr, uint64_t *program)
 {
     bcr->cycle_count = 0;
-    bcr->stack_head = 0;
     bcr->stack_size = 200;
     bcr->stack = malloc(bcr->stack_size * sizeof(struct bytecode_value));
     bcr->reg[BYTECODE_REGISTER_RIP] = create_u64_constant(0);
+    bcr->reg[BYTECODE_REGISTER_RSP] = create_u64_constant(0);
 }
 
 void bytecode_runner_destroy(struct bytecode_runner *bcr)
@@ -53,14 +53,14 @@ struct bytecode_value bytecode_runner_result(struct bytecode_runner *bcr)
 
 void bytecode_runner_push_stack(struct bytecode_runner *bcr, struct bytecode_value value)
 {
-    bcr->stack[bcr->stack_head++] = value;
-    assert(bcr->stack_head < bcr->stack_size);
+    bcr->stack[bcr->reg[BYTECODE_REGISTER_RSP]._u64++] = value;
+    assert(bcr->reg[BYTECODE_REGISTER_RSP]._u64 < bcr->stack_size);
 }
 
 struct bytecode_value bytecode_runner_pop_stack(struct bytecode_runner *bcr)
 {
-    assert(bcr->stack_head > 0);
-    return bcr->stack[--bcr->stack_head];
+    assert(bcr->reg[BYTECODE_REGISTER_RSP]._u64 > 0);
+    return bcr->stack[--bcr->reg[BYTECODE_REGISTER_RSP]._u64];
 }
 
 int main(int argc, char **argv)
