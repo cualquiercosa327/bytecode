@@ -6,22 +6,14 @@
 #include "bytecode_instruction.h"
 #include "bytecode_instruction.c"
 
+#include "bytecode_opcode.h"
+#include "bytecode_opcode.c"
+
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 #include <inttypes.h>
-
-enum bytecode_opcode
-{
-    HALT           = 0x00,
-
-    PUSH_INT       = 0x10,
-    PUSH_FLOAT     = 0x11,
-
-    ADD_INT_IMM    = 0x20,
-    ADD_FLOAT_IMM  = 0x30,
-};
 
 void bytecode_runner_init(struct bytecode_runner *bcr, uint64_t *program)
 {
@@ -67,41 +59,7 @@ void do_cycle(struct bytecode_runner *bcr)
     printf("cycle %3" PRIu64 ": op = %2X, r1 = %2d, r2 = %2d\n",
             ++bcr->cycle_count, instr.op, instr.r1, instr.r2);
 
-    switch (instr.op) {
-
-    case HALT: {
-        bcr->is_running = false;
-    } break;
-
-    case PUSH_INT: {
-        uint64_t constant = fetch_instruction(bcr);
-        struct bytecode_value s64_constant = create_s64_constant(constant);
-        push_stack(bcr, s64_constant);
-    } break;
-
-    case PUSH_FLOAT: {
-        uint64_t constant = fetch_instruction(bcr);
-        struct bytecode_value f32_constant = create_f32_constant(constant);
-        push_stack(bcr, f32_constant);
-    } break;
-
-    case ADD_INT_IMM: {
-        struct bytecode_value rhs = pop_stack(bcr);
-        struct bytecode_value lhs = pop_stack(bcr);
-        assert(lhs.kind == rhs.kind);
-        lhs._s64 += rhs._s64;
-        push_stack(bcr, lhs);
-    } break;
-
-    case ADD_FLOAT_IMM: {
-        struct bytecode_value rhs = pop_stack(bcr);
-        struct bytecode_value lhs = pop_stack(bcr);
-        assert(lhs.kind == rhs.kind);
-        lhs._f32 += rhs._f32;
-        push_stack(bcr, lhs);
-    } break;
-
-    }
+    execute_instruction(bcr, instr);
 }
 
 int main(int argc, char **argv)
@@ -113,13 +71,13 @@ int main(int argc, char **argv)
     int64_t d = 0x1234567890abcdef;
 
     uint64_t program[] = {
-        encode_instruction(PUSH_INT), c,
-        encode_instruction(PUSH_INT), d,
-        encode_instruction(ADD_INT_IMM),
-        encode_instruction(PUSH_FLOAT), (uint64_t)(*(uint64_t *)&a),
-        encode_instruction(PUSH_FLOAT), (uint64_t)(*(uint64_t *)&b),
-        encode_instruction(ADD_FLOAT_IMM),
-        encode_instruction(HALT),
+        encode_instruction(BYTECODE_OPCODE_PUSH_INT), c,
+        encode_instruction(BYTECODE_OPCODE_PUSH_INT), d,
+        encode_instruction(BYTECODE_OPCODE_ADD_INT_IMM),
+        encode_instruction(BYTECODE_OPCODE_PUSH_FLOAT), (uint64_t)(*(uint64_t *)&a),
+        encode_instruction(BYTECODE_OPCODE_PUSH_FLOAT), (uint64_t)(*(uint64_t *)&b),
+        encode_instruction(BYTECODE_OPCODE_ADD_FLOAT_IMM),
+        encode_instruction(BYTECODE_OPCODE_HALT),
     };
 
     struct bytecode_runner bcr = {};

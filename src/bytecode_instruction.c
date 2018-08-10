@@ -1,5 +1,25 @@
 #include "bytecode_instruction.h"
 #include "bytecode_runner.h"
+#include "bytecode_opcode.h"
+
+#include <stdio.h>
+
+static bytecode_instruction_handler *instruction_handlers[BYTECODE_OPCODE_COUNT] = {
+    [BYTECODE_OPCODE_HALT]          = exec_op_halt,
+    [BYTECODE_OPCODE_PUSH_INT]      = exec_op_push_int,
+    [BYTECODE_OPCODE_PUSH_FLOAT]    = exec_op_push_float,
+    [BYTECODE_OPCODE_ADD_INT_IMM]   = exec_op_add_int_imm,
+    [BYTECODE_OPCODE_ADD_FLOAT_IMM] = exec_op_add_float_imm,
+};
+
+void execute_instruction(struct bytecode_runner *bcr, struct bytecode_instruction instr)
+{
+    if (instruction_handlers[instr.op]) {
+        instruction_handlers[instr.op](bcr, instr.op, instr.r1, instr.r2);
+    } else {
+        fprintf(stderr, "%2X: missing instruction handler\n", instr.op);
+    }
+}
 
 uint64_t fetch_instruction(struct bytecode_runner *bcr)
 {
