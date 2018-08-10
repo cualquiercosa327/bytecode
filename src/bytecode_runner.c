@@ -1,13 +1,12 @@
 #include "bytecode_runner.h"
+#include "bytecode_opcode.h"
 
 #include "bytecode_value.h"
 #include "bytecode_value.c"
 
 #include "bytecode_instruction.h"
 #include "bytecode_instruction.c"
-
-#include "bytecode_opcode.h"
-#include "bytecode_opcode.c"
+#include "bytecode_instruction_handlers.c"
 
 #include <stdio.h>
 #include <assert.h>
