@@ -6,7 +6,9 @@
 
 #include "bytecode_instruction.h"
 #include "bytecode_instruction.c"
-#include "bytecode_instruction_handlers.c"
+
+#include "bytecode_instruction_handler.h"
+#include "bytecode_instruction_handler.c"
 
 #include <stdio.h>
 #include <assert.h>

@@ -1,0 +1,12 @@
+#ifndef BYTECODE_INSTRUCTION_HANDLERS
+#define BYTECODE_INSTRUCTION_HANDLERS
+
+#include "bytecode_instruction.h"
+
+bytecode_instruction_handler_(exec_op_halt);
+bytecode_instruction_handler_(exec_op_push_int);
+bytecode_instruction_handler_(exec_op_push_float);
+bytecode_instruction_handler_(exec_op_add_int_imm);
+bytecode_instruction_handler_(exec_op_add_float_imm);
+
+#endif

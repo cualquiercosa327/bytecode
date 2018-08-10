@@ -1,4 +1,5 @@
 #include "bytecode_instruction.h"
+#include "bytecode_instruction_handler.h"
 #include "bytecode_runner.h"
 #include "bytecode_opcode.h"
 
