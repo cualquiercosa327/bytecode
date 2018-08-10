@@ -1,9 +1,10 @@
 #include <stdio.h>
+#include <assert.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
-#include <assert.h>
+#include <inttypes.h>
 
 #define LIST_OF_VALUE_KINDS \
     X(Bytecode_Value_S64),\
@@ -253,7 +254,7 @@ void do_cycle(struct bytecode_runner *bcr)
     uint64_t raw_instr = fetch_instruction(bcr);
     struct bytecode_instruction instr = decode_instruction(raw_instr);
 
-    printf("cycle %3lld: op = %2X, r1 = %2d, r2 = %2d\n",
+    printf("cycle %3" PRIu64 ": op = %2X, r1 = %2d, r2 = %2d\n",
             ++bcr->cycle_count, instr.op, instr.r1, instr.r2);
 
     switch (instr.op) {
@@ -340,7 +341,7 @@ int main(int argc, char **argv)
     printf("head = %.2f\n", fval._f32);
 
     struct bytecode_value ival = pop_stack(&bcr);
-    printf("head = %lld\n", ival._s64);
+    printf("head = %" PRId64 "\n", ival._s64);
 
     bytecode_runner_destroy(&bcr);
 
