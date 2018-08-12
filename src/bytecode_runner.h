@@ -6,6 +6,31 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+static const char *bytecode_register_str[] =
+{
+    "RIP",
+
+    "RAX",
+    "RBX",
+    "RCX",
+    "RDX",
+    "RBP",
+    "RSP",
+    "RSI",
+    "RDI",
+
+    "R8",
+    "R9",
+    "R10",
+    "R11",
+    "R12",
+    "R13",
+    "R14",
+    "R15",
+
+    "COUNT"
+};
+
 enum bytecode_register
 {
     BYTECODE_REGISTER_RIP,
@@ -33,6 +58,9 @@ enum bytecode_register
 
 struct bytecode_runner
 {
+    bool verbose;
+    bool single_step;
+
     bool is_running;
     uint64_t cycle_count;
 
@@ -43,7 +71,7 @@ struct bytecode_runner
     struct bytecode_value reg[BYTECODE_REGISTER_COUNT];
 };
 
-void bytecode_runner_init(struct bytecode_runner *bcr, uint64_t *program);
+void bytecode_runner_init(struct bytecode_runner *bcr);
 void bytecode_runner_destroy(struct bytecode_runner *bcr);
 
 void bytecode_runner_run(struct bytecode_runner *bcr, uint64_t *program);
@@ -51,5 +79,8 @@ struct bytecode_value bytecode_runner_result(struct bytecode_runner *bcr);
 
 void bytecode_runner_push_stack(struct bytecode_runner *bcr, struct bytecode_value value);
 struct bytecode_value bytecode_runner_pop_stack(struct bytecode_runner *bcr);
+
+void bytecode_runner_print_registers(struct bytecode_runner *bcr);
+void bytecode_runner_print_stack(struct bytecode_runner *bcr);
 
 #endif

@@ -51,6 +51,12 @@ uint64_t encode_instruction_r2(uint8_t instr, uint8_t r1, uint8_t r2);
 #define inc_reg(reg) encode_instruction_r1(BYTECODE_OPCODE_INC_REG, reg)
 #define dec_reg(reg) encode_instruction_r1(BYTECODE_OPCODE_DEC_REG, reg)
 
+#define call_imm(val) encode_instruction(BYTECODE_OPCODE_CALL_IMM), (uint64_t)(*(uint64_t *)&val)
+#define call_reg(reg) encode_instruction_r1(BYTECODE_OPCODE_CALL_REG, reg)
+
+#define enter() encode_instruction(BYTECODE_OPCODE_ENTER)
+#define leave() encode_instruction(BYTECODE_OPCODE_LEAVE)
+
 #define halt() encode_instruction(BYTECODE_OPCODE_HALT)
 
 #endif

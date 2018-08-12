@@ -28,5 +28,9 @@ bytecode_instruction_handler_(exec_op_mul_reg_reg);
 bytecode_instruction_handler_(exec_op_neg_reg);
 bytecode_instruction_handler_(exec_op_inc_reg);
 bytecode_instruction_handler_(exec_op_dec_reg);
+bytecode_instruction_handler_(exec_op_call_imm);
+bytecode_instruction_handler_(exec_op_call_reg);
+bytecode_instruction_handler_(exec_op_enter);
+bytecode_instruction_handler_(exec_op_leave);
 
 #endif

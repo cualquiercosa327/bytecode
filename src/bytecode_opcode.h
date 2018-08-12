@@ -35,6 +35,12 @@ enum bytecode_opcode
     BYTECODE_OPCODE_INC_REG        = 0x3D,
     BYTECODE_OPCODE_DEC_REG        = 0x3E,
 
+    BYTECODE_OPCODE_CALL_IMM       = 0x50,
+    BYTECODE_OPCODE_CALL_REG       = 0x51,
+
+    BYTECODE_OPCODE_ENTER          = 0x60,
+    BYTECODE_OPCODE_LEAVE          = 0x61,
+
     BYTECODE_OPCODE_COUNT          = 0xFF
 };
 

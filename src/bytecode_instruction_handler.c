@@ -160,3 +160,30 @@ bytecode_instruction_handler_(exec_op_dec_reg)
     struct bytecode_value one = bytecode_value_constant_one(bcr->reg[reg1]);
     bytecode_value_sub(&bcr->reg[reg1], one);
 }
+
+bytecode_instruction_handler_(exec_op_call_imm)
+{
+    uint64_t constant = fetch_instruction(bcr);
+    struct bytecode_value u64_constant = bytecode_value_create_u64(constant);
+    bytecode_runner_push_stack(bcr, bcr->reg[BYTECODE_REGISTER_RIP]);
+    bcr->reg[BYTECODE_REGISTER_RIP] = u64_constant;
+}
+
+bytecode_instruction_handler_(exec_op_call_reg)
+{
+    bytecode_runner_push_stack(bcr, bcr->reg[BYTECODE_REGISTER_RIP]);
+    bcr->reg[BYTECODE_REGISTER_RIP] = bcr->reg[reg1];
+}
+
+bytecode_instruction_handler_(exec_op_enter)
+{
+    bytecode_runner_push_stack(bcr, bcr->reg[BYTECODE_REGISTER_RBP]);
+    bcr->reg[BYTECODE_REGISTER_RBP] = bcr->reg[BYTECODE_REGISTER_RSP];
+}
+
+bytecode_instruction_handler_(exec_op_leave)
+{
+    bcr->reg[BYTECODE_REGISTER_RSP] = bcr->reg[BYTECODE_REGISTER_RBP];
+    bcr->reg[BYTECODE_REGISTER_RBP] = bytecode_runner_pop_stack(bcr);
+    bcr->reg[BYTECODE_REGISTER_RIP] = bytecode_runner_pop_stack(bcr);
+}
