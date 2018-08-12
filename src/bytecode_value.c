@@ -224,32 +224,6 @@ void bytecode_value_sub(struct bytecode_value *result, struct bytecode_value oth
     bytecode_value_add(result, other);
 }
 
-void bytecode_value_xor(struct bytecode_value *result, struct bytecode_value other)
-{
-    switch (result->kind) {
-    case BYTECODE_VALUE_S64:
-    case BYTECODE_VALUE_S32:
-    case BYTECODE_VALUE_S16:
-    case BYTECODE_VALUE_S8: {
-        result->_s64 ^= other._s64;
-    } break;
-
-    case BYTECODE_VALUE_U64:
-    case BYTECODE_VALUE_U32:
-    case BYTECODE_VALUE_U16:
-    case BYTECODE_VALUE_U8: {
-        result->_u64 ^= other._u64;
-    } break;
-
-    case BYTECODE_VALUE_POINTER: {
-        result->ptr = (void *)((uint64_t)result->ptr ^ (uint64_t)other.ptr);
-    } break;
-
-    default: {
-    } break;
-    }
-}
-
 void bytecode_value_print(FILE *stream, struct bytecode_value *value)
 {
     switch (value->kind) {

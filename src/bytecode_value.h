@@ -77,6 +77,5 @@ void bytecode_value_neg(struct bytecode_value *result);
 void bytecode_value_add(struct bytecode_value *result, struct bytecode_value other);
 void bytecode_value_mul(struct bytecode_value *result, struct bytecode_value other);
 void bytecode_value_sub(struct bytecode_value *result, struct bytecode_value other);
-void bytecode_value_xor(struct bytecode_value *result, struct bytecode_value other);
 
 #endif
