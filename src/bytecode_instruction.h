@@ -37,6 +37,6 @@ uint64_t encode_instruction_r2(uint8_t instr, uint8_t r1, uint8_t r2);
 #define addf_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_ADDF_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
 #define add_reg_reg(reg1, reg2) encode_instruction_r2(BYTECODE_OPCODE_ADD_REG_REG, reg1, reg2)
 
-#define halt encode_instruction(BYTECODE_OPCODE_HALT)
+#define halt() encode_instruction(BYTECODE_OPCODE_HALT)
 
 #endif

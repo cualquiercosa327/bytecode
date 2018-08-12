@@ -77,7 +77,7 @@ int main(int argc, char **argv)
         add_reg_reg(BYTECODE_REGISTER_RAX, BYTECODE_REGISTER_RBX),
         movf_reg_imm(BYTECODE_REGISTER_RAX, a),
         addf_reg_imm(BYTECODE_REGISTER_RAX, b),
-        halt,
+        halt(),
     };
 
     struct bytecode_runner bcr = {};
