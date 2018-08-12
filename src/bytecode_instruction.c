@@ -7,12 +7,22 @@
 
 static bytecode_instruction_handler *instruction_handlers[BYTECODE_OPCODE_COUNT] = {
     [BYTECODE_OPCODE_HALT]          = exec_op_halt,
-    [BYTECODE_OPCODE_PUSH_INT]      = exec_op_push_int,
-    [BYTECODE_OPCODE_PUSH_FLOAT]    = exec_op_push_float,
-    [BYTECODE_OPCODE_ADD_INT_IMM]   = exec_op_add_int_imm,
-    [BYTECODE_OPCODE_ADD_FLOAT_IMM] = exec_op_add_float_imm,
+
+    [BYTECODE_OPCODE_MOVU_REG_IMM]  = exec_op_movu_reg_imm,
+    [BYTECODE_OPCODE_MOVI_REG_IMM]  = exec_op_movi_reg_imm,
+    [BYTECODE_OPCODE_MOVF_REG_IMM]  = exec_op_movf_reg_imm,
+    [BYTECODE_OPCODE_MOV_REG_REG]   = exec_op_mov_reg_reg,
+
+    [BYTECODE_OPCODE_PUSHU_IMM]     = exec_op_pushu_imm,
+    [BYTECODE_OPCODE_PUSHI_IMM]     = exec_op_pushi_imm,
+    [BYTECODE_OPCODE_PUSHF_IMM]     = exec_op_pushf_imm,
     [BYTECODE_OPCODE_PUSH_REG]      = exec_op_push_reg,
     [BYTECODE_OPCODE_POP_REG]       = exec_op_pop_reg,
+
+    [BYTECODE_OPCODE_ADDU_REG_IMM]  = exec_op_addu_reg_imm,
+    [BYTECODE_OPCODE_ADDI_REG_IMM]  = exec_op_addi_reg_imm,
+    [BYTECODE_OPCODE_ADDF_REG_IMM]  = exec_op_addf_reg_imm,
+    [BYTECODE_OPCODE_ADD_REG_REG]   = exec_op_add_reg_reg,
 };
 
 void execute_instruction(struct bytecode_runner *bcr, struct bytecode_instruction instr)

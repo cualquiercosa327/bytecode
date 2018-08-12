@@ -54,21 +54,23 @@ struct bytecode_value
     };
 };
 
-struct bytecode_value create_s64_constant(uint64_t s64);
-struct bytecode_value create_s32_constant(uint64_t s32);
-struct bytecode_value create_s16_constant(uint64_t s16);
-struct bytecode_value create_s8_constant(uint64_t s8);
+struct bytecode_value bytecode_value_create_s64(uint64_t s64);
+struct bytecode_value bytecode_value_create_s32(uint64_t s32);
+struct bytecode_value bytecode_value_create_s16(uint64_t s16);
+struct bytecode_value bytecode_value_create_s8(uint64_t s8);
 
-struct bytecode_value create_u64_constant(uint64_t u64);
-struct bytecode_value create_u32_constant(uint64_t u32);
-struct bytecode_value create_u16_constant(uint64_t u16);
-struct bytecode_value create_u8_constant(uint64_t u8);
+struct bytecode_value bytecode_value_create_u64(uint64_t u64);
+struct bytecode_value bytecode_value_create_u32(uint64_t u32);
+struct bytecode_value bytecode_value_create_u16(uint64_t u16);
+struct bytecode_value bytecode_value_create_u8(uint64_t u8);
 
-struct bytecode_value create_f64_constant(uint64_t f64);
-struct bytecode_value create_f32_constant(uint64_t f32);
+struct bytecode_value bytecode_value_create_f64(uint64_t f64);
+struct bytecode_value bytecode_value_create_f32(uint64_t f32);
 
-struct bytecode_value create_ptr_constant(uint64_t ptr);
+struct bytecode_value bytecode_value_create_ptr(uint64_t ptr);
 
-void print_bytecode_value(struct bytecode_value *value, FILE *stream);
+void bytecode_value_print(FILE *stream, struct bytecode_value *value);
+
+void bytecode_value_add(struct bytecode_value *result, struct bytecode_value other);
 
 #endif

@@ -20,8 +20,8 @@ void bytecode_runner_init(struct bytecode_runner *bcr, uint64_t *program)
     bcr->cycle_count = 0;
     bcr->stack_size = 200;
     bcr->stack = malloc(bcr->stack_size * sizeof(struct bytecode_value));
-    bcr->reg[BYTECODE_REGISTER_RIP] = create_u64_constant(0);
-    bcr->reg[BYTECODE_REGISTER_RSP] = create_u64_constant(0);
+    bcr->reg[BYTECODE_REGISTER_RIP] = bytecode_value_create_u64(0);
+    bcr->reg[BYTECODE_REGISTER_RSP] = bytecode_value_create_u64(0);
 }
 
 void bytecode_runner_destroy(struct bytecode_runner *bcr)
@@ -65,35 +65,29 @@ struct bytecode_value bytecode_runner_pop_stack(struct bytecode_runner *bcr)
 
 int main(int argc, char **argv)
 {
-    float a = 22.3f;
-    float b =  3.2f;
+    double a = 22.3f;
+    double b =  3.2f;
 
     int64_t c = 0x1234567890abcdef;
     int64_t d = 0x1234567890abcdef;
 
     uint64_t program[] = {
-        encode_instruction(BYTECODE_OPCODE_PUSH_INT), c,
-        encode_instruction(BYTECODE_OPCODE_PUSH_INT), d,
-        encode_instruction(BYTECODE_OPCODE_ADD_INT_IMM),
-        encode_instruction_r1(BYTECODE_OPCODE_POP_REG, BYTECODE_REGISTER_RAX),
-        encode_instruction(BYTECODE_OPCODE_PUSH_FLOAT), (uint64_t)(*(uint64_t *)&a),
-        encode_instruction(BYTECODE_OPCODE_PUSH_FLOAT), (uint64_t)(*(uint64_t *)&b),
-        encode_instruction(BYTECODE_OPCODE_ADD_FLOAT_IMM),
-        encode_instruction(BYTECODE_OPCODE_HALT),
+        movi_reg_imm(BYTECODE_REGISTER_RAX, c),
+        movi_reg_imm(BYTECODE_REGISTER_RBX, d),
+        add_reg_reg(BYTECODE_REGISTER_RAX, BYTECODE_REGISTER_RBX),
+        movf_reg_imm(BYTECODE_REGISTER_RAX, a),
+        addf_reg_imm(BYTECODE_REGISTER_RAX, b),
+        halt,
     };
 
     struct bytecode_runner bcr = {};
     bytecode_runner_init(&bcr, program);
     bytecode_runner_run(&bcr, program);
     struct bytecode_value result = bytecode_runner_result(&bcr);
-    struct bytecode_value fval = bytecode_runner_pop_stack(&bcr);
     bytecode_runner_destroy(&bcr);
 
-    print_bytecode_value(&fval, stdout);
-    printf("\n");
-
     printf("result = ");
-    print_bytecode_value(&result, stdout);
+    bytecode_value_print(stdout, &result);
     printf("\n");
 
     return 0;
