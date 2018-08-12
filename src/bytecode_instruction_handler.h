@@ -17,5 +17,13 @@ bytecode_instruction_handler_(exec_op_addu_reg_imm);
 bytecode_instruction_handler_(exec_op_addi_reg_imm);
 bytecode_instruction_handler_(exec_op_addf_reg_imm);
 bytecode_instruction_handler_(exec_op_add_reg_reg);
+bytecode_instruction_handler_(exec_op_subu_reg_imm);
+bytecode_instruction_handler_(exec_op_subi_reg_imm);
+bytecode_instruction_handler_(exec_op_subf_reg_imm);
+bytecode_instruction_handler_(exec_op_sub_reg_reg);
+bytecode_instruction_handler_(exec_op_mulu_reg_imm);
+bytecode_instruction_handler_(exec_op_muli_reg_imm);
+bytecode_instruction_handler_(exec_op_mulf_reg_imm);
+bytecode_instruction_handler_(exec_op_mul_reg_reg);
 
 #endif

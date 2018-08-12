@@ -37,6 +37,16 @@ uint64_t encode_instruction_r2(uint8_t instr, uint8_t r1, uint8_t r2);
 #define addf_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_ADDF_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
 #define add_reg_reg(reg1, reg2) encode_instruction_r2(BYTECODE_OPCODE_ADD_REG_REG, reg1, reg2)
 
+#define subu_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_SUBU_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
+#define subi_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_SUBI_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
+#define subf_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_SUBF_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
+#define sub_reg_reg(reg1, reg2) encode_instruction_r2(BYTECODE_OPCODE_SUB_REG_REG, reg1, reg2)
+
+#define mulu_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_MULU_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
+#define muli_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_MULI_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
+#define mulf_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_MULF_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
+#define mul_reg_reg(reg1, reg2) encode_instruction_r2(BYTECODE_OPCODE_MUL_REG_REG, reg1, reg2)
+
 #define halt() encode_instruction(BYTECODE_OPCODE_HALT)
 
 #endif

@@ -70,27 +70,76 @@ bytecode_instruction_handler_(exec_op_addu_reg_imm)
 {
     uint64_t constant = fetch_instruction(bcr);
     struct bytecode_value u64_constant = bytecode_value_create_u64(constant);
-    assert(bcr->reg[reg1].kind == u64_constant.kind);
-    bcr->reg[reg1]._u64 += u64_constant._u64;
+    bytecode_value_add(&bcr->reg[reg1], u64_constant);
 }
 
 bytecode_instruction_handler_(exec_op_addi_reg_imm)
 {
     uint64_t constant = fetch_instruction(bcr);
     struct bytecode_value s64_constant = bytecode_value_create_s64(constant);
-    assert(bcr->reg[reg1].kind == s64_constant.kind);
-    bcr->reg[reg1]._s64 += s64_constant._s64;
+    bytecode_value_add(&bcr->reg[reg1], s64_constant);
 }
 
 bytecode_instruction_handler_(exec_op_addf_reg_imm)
 {
     uint64_t constant = fetch_instruction(bcr);
     struct bytecode_value f64_constant = bytecode_value_create_f64(constant);
-    assert(bcr->reg[reg1].kind == f64_constant.kind);
-    bcr->reg[reg1]._f64 += f64_constant._f64;
+    bytecode_value_add(&bcr->reg[reg1], f64_constant);
 }
 
 bytecode_instruction_handler_(exec_op_add_reg_reg)
 {
     bytecode_value_add(&bcr->reg[reg1], bcr->reg[reg2]);
+}
+
+bytecode_instruction_handler_(exec_op_subu_reg_imm)
+{
+    uint64_t constant = fetch_instruction(bcr);
+    struct bytecode_value u64_constant = bytecode_value_create_u64(constant);
+    bytecode_value_sub(&bcr->reg[reg1], u64_constant);
+}
+
+bytecode_instruction_handler_(exec_op_subi_reg_imm)
+{
+    uint64_t constant = fetch_instruction(bcr);
+    struct bytecode_value s64_constant = bytecode_value_create_s64(constant);
+    bytecode_value_sub(&bcr->reg[reg1], s64_constant);
+}
+
+bytecode_instruction_handler_(exec_op_subf_reg_imm)
+{
+    uint64_t constant = fetch_instruction(bcr);
+    struct bytecode_value f64_constant = bytecode_value_create_f64(constant);
+    bytecode_value_sub(&bcr->reg[reg1], f64_constant);
+}
+
+bytecode_instruction_handler_(exec_op_sub_reg_reg)
+{
+    bytecode_value_sub(&bcr->reg[reg1], bcr->reg[reg2]);
+}
+
+bytecode_instruction_handler_(exec_op_mulu_reg_imm)
+{
+    uint64_t constant = fetch_instruction(bcr);
+    struct bytecode_value u64_constant = bytecode_value_create_u64(constant);
+    bytecode_value_mul(&bcr->reg[reg1], u64_constant);
+}
+
+bytecode_instruction_handler_(exec_op_muli_reg_imm)
+{
+    uint64_t constant = fetch_instruction(bcr);
+    struct bytecode_value s64_constant = bytecode_value_create_s64(constant);
+    bytecode_value_mul(&bcr->reg[reg1], s64_constant);
+}
+
+bytecode_instruction_handler_(exec_op_mulf_reg_imm)
+{
+    uint64_t constant = fetch_instruction(bcr);
+    struct bytecode_value f64_constant = bytecode_value_create_f64(constant);
+    bytecode_value_mul(&bcr->reg[reg1], f64_constant);
+}
+
+bytecode_instruction_handler_(exec_op_mul_reg_reg)
+{
+    bytecode_value_mul(&bcr->reg[reg1], bcr->reg[reg2]);
 }

@@ -67,16 +67,21 @@ int main(int argc, char **argv)
 {
     double a = 22.3f;
     double b =  3.2f;
+    double c =  10.499999f;
 
-    int64_t c = 0x1234567890abcdef;
-    int64_t d = 0x1234567890abcdef;
+    int64_t d = 1;
+    int64_t e = 3;
+    int64_t f = -5;
 
     uint64_t program[] = {
-        movi_reg_imm(BYTECODE_REGISTER_RAX, c),
-        movi_reg_imm(BYTECODE_REGISTER_RBX, d),
+        movi_reg_imm(BYTECODE_REGISTER_RAX, d),
+        movi_reg_imm(BYTECODE_REGISTER_RBX, e),
         add_reg_reg(BYTECODE_REGISTER_RAX, BYTECODE_REGISTER_RBX),
+        subi_reg_imm(BYTECODE_REGISTER_RAX, f),
         movf_reg_imm(BYTECODE_REGISTER_RAX, a),
         addf_reg_imm(BYTECODE_REGISTER_RAX, b),
+        subf_reg_imm(BYTECODE_REGISTER_RAX, c),
+        mulf_reg_imm(BYTECODE_REGISTER_RAX, b),
         halt(),
     };
 
