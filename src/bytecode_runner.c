@@ -99,8 +99,9 @@ void bytecode_runner_print_registers(struct bytecode_runner *bcr)
 void bytecode_runner_print_stack(struct bytecode_runner *bcr)
 {
     if (!bcr->verbose) return;
+
     printf("stack [ ");
-    for(int i = 0; i < bcr->reg[BYTECODE_REGISTER_RSP]._u64; ++i) {
+    for (int i = 0; i < bcr->reg[BYTECODE_REGISTER_RSP]._u64; ++i) {
         bytecode_value_print(stdout, &bcr->stack[i]);
         printf(" ");
     }
