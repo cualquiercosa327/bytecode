@@ -48,6 +48,8 @@ static bytecode_instruction_handler *instruction_handlers[BYTECODE_OPCODE_COUNT]
     [BYTECODE_OPCODE_STORE_LOCAL_REG]  = exec_op_store_local_reg,
     [BYTECODE_OPCODE_LOAD_LOCAL_IMM]   = exec_op_load_local_imm,
     [BYTECODE_OPCODE_LOAD_LOCAL_REG]   = exec_op_load_local_reg,
+
+    [BYTECODE_OPCODE_NOP]              = exec_op_nop
 };
 
 void execute_instruction(struct bytecode_runner *bcr, struct bytecode_instruction instr)

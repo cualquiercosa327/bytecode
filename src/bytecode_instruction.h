@@ -62,6 +62,7 @@ uint64_t encode_instruction_r2(uint8_t instr, uint8_t r1, uint8_t r2);
 #define load_local_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_LOAD_LOCAL_IMM, reg), val
 #define load_local_reg(reg1, reg2) encode_instruction_r2(BYTECODE_OPCODE_LOAD_LOCAL_REG, reg1, reg2)
 
+#define nop() encode_instruction(BYTECODE_OPCODE_NOP)
 #define halt() encode_instruction(BYTECODE_OPCODE_HALT)
 
 #endif

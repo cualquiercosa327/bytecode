@@ -9,6 +9,10 @@ bytecode_instruction_handler_(exec_op_halt)
     bcr->is_running = false;
 }
 
+bytecode_instruction_handler_(exec_op_nop)
+{
+}
+
 bytecode_instruction_handler_(exec_op_movu_reg_imm)
 {
     uint64_t constant = fetch_instruction(bcr);

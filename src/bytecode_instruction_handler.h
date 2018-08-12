@@ -4,6 +4,7 @@
 #include "bytecode_instruction.h"
 
 bytecode_instruction_handler_(exec_op_halt);
+bytecode_instruction_handler_(exec_op_nop);
 bytecode_instruction_handler_(exec_op_movu_reg_imm);
 bytecode_instruction_handler_(exec_op_movi_reg_imm);
 bytecode_instruction_handler_(exec_op_movf_reg_imm);
