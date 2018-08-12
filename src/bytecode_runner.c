@@ -141,6 +141,8 @@ int main(int argc, char **argv)
     double c = 10.499999f;
 
     uint64_t __main = 4;
+    uint64_t __add_floats = 33;
+
     uint64_t program[] = {
         movi_reg_imm(BYTECODE_REGISTER_RAX, __main),
         call_reg(BYTECODE_REGISTER_RAX),
@@ -158,6 +160,14 @@ int main(int argc, char **argv)
         store_local_imm(2, BYTECODE_REGISTER_R15),
         load_local_imm(BYTECODE_REGISTER_RCX, 2),
         xor_reg_reg(BYTECODE_REGISTER_RCX, BYTECODE_REGISTER_RCX),
+        xor_reg_reg(BYTECODE_REGISTER_RAX, BYTECODE_REGISTER_RAX),
+        movf_reg_imm(BYTECODE_REGISTER_RDI, a),
+        movf_reg_imm(BYTECODE_REGISTER_RSI, b),
+        call_imm(__add_floats),
+        leave(),
+        enter(),
+        mov_reg_reg(BYTECODE_REGISTER_RAX, BYTECODE_REGISTER_RDI),
+        add_reg_reg(BYTECODE_REGISTER_RAX, BYTECODE_REGISTER_RSI),
         leave(),
     };
 

@@ -26,9 +26,9 @@ uint64_t encode_instruction_r2(uint8_t instr, uint8_t r1, uint8_t r2);
 #define movf_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_MOVF_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
 #define mov_reg_reg(reg1, reg2) encode_instruction_r2(BYTECODE_OPCODE_MOV_REG_REG, reg1, reg2)
 
-#define pushu_imm(reg, val) encode_instruction(BYTECODE_OPCODE_PUSHU_IMM), val
-#define pushi_imm(reg, val) encode_instruction(BYTECODE_OPCODE_PUSHI_IMM), val
-#define pushf_imm(reg, val) encode_instruction(BYTECODE_OPCODE_PUSHF_IMM), (uint64_t)(*(uint64_t *)&val)
+#define pushu_imm(val) encode_instruction(BYTECODE_OPCODE_PUSHU_IMM), val
+#define pushi_imm(val) encode_instruction(BYTECODE_OPCODE_PUSHI_IMM), val
+#define pushf_imm(val) encode_instruction(BYTECODE_OPCODE_PUSHF_IMM), (uint64_t)(*(uint64_t *)&val)
 #define push_reg(reg) encode_instruction_r1(BYTECODE_OPCODE_PUSH_REG, reg)
 #define pop_reg(reg) encode_instruction_r1(BYTECODE_OPCODE_POP_REG, reg)
 
