@@ -140,18 +140,23 @@ int main(int argc, char **argv)
     double b =  3.2f;
     double c = 10.499999f;
 
-    uint64_t main = 4;
+    uint64_t __main = 4;
     uint64_t program[] = {
-        movi_reg_imm(BYTECODE_REGISTER_RAX, main),
+        movi_reg_imm(BYTECODE_REGISTER_RAX, __main),
         call_reg(BYTECODE_REGISTER_RAX),
         halt(),
         enter(),
+        addi_reg_imm(BYTECODE_REGISTER_RSP, 5),
         movf_reg_imm(BYTECODE_REGISTER_RAX, a),
         addf_reg_imm(BYTECODE_REGISTER_RAX, b),
         subf_reg_imm(BYTECODE_REGISTER_RAX, c),
         mulf_reg_imm(BYTECODE_REGISTER_RAX, b),
         dec_reg(BYTECODE_REGISTER_RAX),
-        movi_reg_imm(BYTECODE_REGISTER_R15, main),
+        movi_reg_imm(BYTECODE_REGISTER_R15, 12),
+        store_local_reg(BYTECODE_REGISTER_RCX, BYTECODE_REGISTER_R15),
+        load_local_reg(BYTECODE_REGISTER_R12, BYTECODE_REGISTER_RCX),
+        store_local_imm(2, BYTECODE_REGISTER_R15),
+        load_local_imm(BYTECODE_REGISTER_RCX, 2),
         leave(),
     };
 

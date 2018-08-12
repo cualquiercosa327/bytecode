@@ -21,29 +21,29 @@ uint64_t encode_instruction(uint8_t instr);
 uint64_t encode_instruction_r1(uint8_t instr, uint8_t r1);
 uint64_t encode_instruction_r2(uint8_t instr, uint8_t r1, uint8_t r2);
 
-#define movu_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_MOVU_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
-#define movi_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_MOVI_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
+#define movu_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_MOVU_REG_IMM, reg), val
+#define movi_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_MOVI_REG_IMM, reg), val
 #define movf_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_MOVF_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
 #define mov_reg_reg(reg1, reg2) encode_instruction_r2(BYTECODE_OPCODE_MOV_REG_REG, reg1, reg2)
 
-#define pushu_imm(reg, val) encode_instruction(BYTECODE_OPCODE_PUSHU_IMM), (uint64_t)(*(uint64_t *)&val)
-#define pushi_imm(reg, val) encode_instruction(BYTECODE_OPCODE_PUSHI_IMM), (uint64_t)(*(uint64_t *)&val)
+#define pushu_imm(reg, val) encode_instruction(BYTECODE_OPCODE_PUSHU_IMM), val
+#define pushi_imm(reg, val) encode_instruction(BYTECODE_OPCODE_PUSHI_IMM), val
 #define pushf_imm(reg, val) encode_instruction(BYTECODE_OPCODE_PUSHF_IMM), (uint64_t)(*(uint64_t *)&val)
 #define push_reg(reg) encode_instruction_r1(BYTECODE_OPCODE_PUSH_REG, reg)
 #define pop_reg(reg) encode_instruction_r1(BYTECODE_OPCODE_POP_REG, reg)
 
-#define addu_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_ADDU_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
-#define addi_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_ADDI_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
+#define addu_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_ADDU_REG_IMM, reg), val
+#define addi_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_ADDI_REG_IMM, reg), val
 #define addf_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_ADDF_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
 #define add_reg_reg(reg1, reg2) encode_instruction_r2(BYTECODE_OPCODE_ADD_REG_REG, reg1, reg2)
 
-#define subu_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_SUBU_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
-#define subi_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_SUBI_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
+#define subu_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_SUBU_REG_IMM, reg), val
+#define subi_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_SUBI_REG_IMM, reg), val
 #define subf_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_SUBF_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
 #define sub_reg_reg(reg1, reg2) encode_instruction_r2(BYTECODE_OPCODE_SUB_REG_REG, reg1, reg2)
 
-#define mulu_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_MULU_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
-#define muli_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_MULI_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
+#define mulu_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_MULU_REG_IMM, reg), val
+#define muli_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_MULI_REG_IMM, reg), val
 #define mulf_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_MULF_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
 #define mul_reg_reg(reg1, reg2) encode_instruction_r2(BYTECODE_OPCODE_MUL_REG_REG, reg1, reg2)
 
@@ -51,11 +51,15 @@ uint64_t encode_instruction_r2(uint8_t instr, uint8_t r1, uint8_t r2);
 #define inc_reg(reg) encode_instruction_r1(BYTECODE_OPCODE_INC_REG, reg)
 #define dec_reg(reg) encode_instruction_r1(BYTECODE_OPCODE_DEC_REG, reg)
 
-#define call_imm(val) encode_instruction(BYTECODE_OPCODE_CALL_IMM), (uint64_t)(*(uint64_t *)&val)
+#define call_imm(val) encode_instruction(BYTECODE_OPCODE_CALL_IMM), val
 #define call_reg(reg) encode_instruction_r1(BYTECODE_OPCODE_CALL_REG, reg)
 
 #define enter() encode_instruction(BYTECODE_OPCODE_ENTER)
 #define leave() encode_instruction(BYTECODE_OPCODE_LEAVE)
+#define store_local_imm(val, reg) encode_instruction_r1(BYTECODE_OPCODE_STORE_LOCAL_IMM, reg), val
+#define store_local_reg(reg1, reg2) encode_instruction_r2(BYTECODE_OPCODE_STORE_LOCAL_REG, reg1, reg2)
+#define load_local_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_LOAD_LOCAL_IMM, reg), val
+#define load_local_reg(reg1, reg2) encode_instruction_r2(BYTECODE_OPCODE_LOAD_LOCAL_REG, reg1, reg2)
 
 #define halt() encode_instruction(BYTECODE_OPCODE_HALT)
 

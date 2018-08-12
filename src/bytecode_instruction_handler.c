@@ -187,3 +187,27 @@ bytecode_instruction_handler_(exec_op_leave)
     bcr->reg[BYTECODE_REGISTER_RBP] = bytecode_runner_pop_stack(bcr);
     bcr->reg[BYTECODE_REGISTER_RIP] = bytecode_runner_pop_stack(bcr);
 }
+
+bytecode_instruction_handler_(exec_op_store_local_imm)
+{
+    uint64_t constant = fetch_instruction(bcr);
+    struct bytecode_value u64_constant = bytecode_value_create_u64(constant);
+    bcr->stack[bcr->reg[BYTECODE_REGISTER_RBP]._u64 + u64_constant._u64] = bcr->reg[reg1];
+}
+
+bytecode_instruction_handler_(exec_op_store_local_reg)
+{
+    bcr->stack[bcr->reg[BYTECODE_REGISTER_RBP]._u64 + bcr->reg[reg1]._u64] = bcr->reg[reg2];
+}
+
+bytecode_instruction_handler_(exec_op_load_local_imm)
+{
+    uint64_t constant = fetch_instruction(bcr);
+    struct bytecode_value u64_constant = bytecode_value_create_u64(constant);
+    bcr->reg[reg1] = bcr->stack[bcr->reg[BYTECODE_REGISTER_RBP]._u64 + u64_constant._u64];
+}
+
+bytecode_instruction_handler_(exec_op_load_local_reg)
+{
+    bcr->reg[reg1] = bcr->stack[bcr->reg[BYTECODE_REGISTER_RBP]._u64 + bcr->reg[reg2]._u64];
+}

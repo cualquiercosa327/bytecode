@@ -32,5 +32,9 @@ bytecode_instruction_handler_(exec_op_call_imm);
 bytecode_instruction_handler_(exec_op_call_reg);
 bytecode_instruction_handler_(exec_op_enter);
 bytecode_instruction_handler_(exec_op_leave);
+bytecode_instruction_handler_(exec_op_store_local_imm);
+bytecode_instruction_handler_(exec_op_store_local_reg);
+bytecode_instruction_handler_(exec_op_load_local_imm);
+bytecode_instruction_handler_(exec_op_load_local_reg);
 
 #endif
