@@ -37,6 +37,7 @@ static bytecode_instruction_handler *instruction_handlers[BYTECODE_OPCODE_COUNT]
     [BYTECODE_OPCODE_NEG_REG]          = exec_op_neg_reg,
     [BYTECODE_OPCODE_INC_REG]          = exec_op_inc_reg,
     [BYTECODE_OPCODE_DEC_REG]          = exec_op_dec_reg,
+    [BYTECODE_OPCODE_XOR_REG_REG]      = exec_op_xor_reg_reg,
 
     [BYTECODE_OPCODE_CALL_IMM]         = exec_op_call_imm,
     [BYTECODE_OPCODE_CALL_REG]         = exec_op_call_reg,

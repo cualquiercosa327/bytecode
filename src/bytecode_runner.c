@@ -157,6 +157,7 @@ int main(int argc, char **argv)
         load_local_reg(BYTECODE_REGISTER_R12, BYTECODE_REGISTER_RCX),
         store_local_imm(2, BYTECODE_REGISTER_R15),
         load_local_imm(BYTECODE_REGISTER_RCX, 2),
+        xor_reg_reg(BYTECODE_REGISTER_RCX, BYTECODE_REGISTER_RCX),
         leave(),
     };
 

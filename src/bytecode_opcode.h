@@ -34,6 +34,7 @@ enum bytecode_opcode
     BYTECODE_OPCODE_NEG_REG           = 0x3C,
     BYTECODE_OPCODE_INC_REG           = 0x3D,
     BYTECODE_OPCODE_DEC_REG           = 0x3E,
+    BYTECODE_OPCODE_XOR_REG_REG       = 0x3F,
 
     BYTECODE_OPCODE_CALL_IMM          = 0x50,
     BYTECODE_OPCODE_CALL_REG          = 0x51,
@@ -81,6 +82,7 @@ static const char *bytecode_opcode_str[BYTECODE_OPCODE_COUNT] =
     [0x3C] = "NEG_REG",
     [0x3D] = "INC_REG",
     [0x3E] = "DEC_REG",
+    [0x3F] = "XOR_REG_REG",
 
     [0x50] = "CALL_IMM",
     [0x51] = "CALL_REG",

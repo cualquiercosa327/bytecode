@@ -161,6 +161,11 @@ bytecode_instruction_handler_(exec_op_dec_reg)
     bytecode_value_sub(&bcr->reg[reg1], one);
 }
 
+bytecode_instruction_handler_(exec_op_xor_reg_reg)
+{
+    bytecode_value_xor(&bcr->reg[reg1], bcr->reg[reg2]);
+}
+
 bytecode_instruction_handler_(exec_op_call_imm)
 {
     uint64_t constant = fetch_instruction(bcr);
