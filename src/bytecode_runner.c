@@ -82,6 +82,7 @@ int main(int argc, char **argv)
         addf_reg_imm(BYTECODE_REGISTER_RAX, b),
         subf_reg_imm(BYTECODE_REGISTER_RAX, c),
         mulf_reg_imm(BYTECODE_REGISTER_RAX, b),
+        dec_reg(BYTECODE_REGISTER_RAX),
         halt(),
     };
 

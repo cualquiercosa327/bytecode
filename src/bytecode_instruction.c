@@ -33,6 +33,10 @@ static bytecode_instruction_handler *instruction_handlers[BYTECODE_OPCODE_COUNT]
     [BYTECODE_OPCODE_MULI_REG_IMM]  = exec_op_muli_reg_imm,
     [BYTECODE_OPCODE_MULF_REG_IMM]  = exec_op_mulf_reg_imm,
     [BYTECODE_OPCODE_MUL_REG_REG]   = exec_op_mul_reg_reg,
+
+    [BYTECODE_OPCODE_NEG_REG]       = exec_op_neg_reg,
+    [BYTECODE_OPCODE_INC_REG]       = exec_op_inc_reg,
+    [BYTECODE_OPCODE_DEC_REG]       = exec_op_dec_reg,
 };
 
 void execute_instruction(struct bytecode_runner *bcr, struct bytecode_instruction instr)

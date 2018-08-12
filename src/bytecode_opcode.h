@@ -31,6 +31,10 @@ enum bytecode_opcode
     BYTECODE_OPCODE_MULF_REG_IMM   = 0x3A,
     BYTECODE_OPCODE_MUL_REG_REG    = 0x3B,
 
+    BYTECODE_OPCODE_NEG_REG        = 0x3C,
+    BYTECODE_OPCODE_INC_REG        = 0x3D,
+    BYTECODE_OPCODE_DEC_REG        = 0x3E,
+
     BYTECODE_OPCODE_COUNT          = 0xFF
 };
 

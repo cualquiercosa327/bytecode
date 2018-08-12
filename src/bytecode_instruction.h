@@ -47,6 +47,10 @@ uint64_t encode_instruction_r2(uint8_t instr, uint8_t r1, uint8_t r2);
 #define mulf_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_MULF_REG_IMM, reg), (uint64_t)(*(uint64_t *)&val)
 #define mul_reg_reg(reg1, reg2) encode_instruction_r2(BYTECODE_OPCODE_MUL_REG_REG, reg1, reg2)
 
+#define neg_reg(reg) encode_instruction_r1(BYTECODE_OPCODE_NEG_REG, reg)
+#define inc_reg(reg) encode_instruction_r1(BYTECODE_OPCODE_INC_REG, reg)
+#define dec_reg(reg) encode_instruction_r1(BYTECODE_OPCODE_DEC_REG, reg)
+
 #define halt() encode_instruction(BYTECODE_OPCODE_HALT)
 
 #endif

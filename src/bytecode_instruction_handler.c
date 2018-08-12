@@ -143,3 +143,20 @@ bytecode_instruction_handler_(exec_op_mul_reg_reg)
 {
     bytecode_value_mul(&bcr->reg[reg1], bcr->reg[reg2]);
 }
+
+bytecode_instruction_handler_(exec_op_neg_reg)
+{
+    bytecode_value_neg(&bcr->reg[reg1]);
+}
+
+bytecode_instruction_handler_(exec_op_inc_reg)
+{
+    struct bytecode_value one = bytecode_value_constant_one(bcr->reg[reg1]);
+    bytecode_value_add(&bcr->reg[reg1], one);
+}
+
+bytecode_instruction_handler_(exec_op_dec_reg)
+{
+    struct bytecode_value one = bytecode_value_constant_one(bcr->reg[reg1]);
+    bytecode_value_sub(&bcr->reg[reg1], one);
+}

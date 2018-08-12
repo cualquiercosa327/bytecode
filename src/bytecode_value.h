@@ -69,6 +69,8 @@ struct bytecode_value bytecode_value_create_f32(uint64_t f32);
 
 struct bytecode_value bytecode_value_create_ptr(uint64_t ptr);
 
+struct bytecode_value bytecode_value_constant_one(struct bytecode_value value);
+
 void bytecode_value_print(FILE *stream, struct bytecode_value *value);
 
 void bytecode_value_neg(struct bytecode_value *result);

@@ -88,6 +88,43 @@ struct bytecode_value bytecode_value_create_ptr(uint64_t ptr)
     return result;
 }
 
+struct bytecode_value bytecode_value_constant_one(struct bytecode_value value)
+{
+    struct bytecode_value result = {};
+
+    switch (value.kind) {
+    case BYTECODE_VALUE_S64:
+    case BYTECODE_VALUE_S32:
+    case BYTECODE_VALUE_S16:
+    case BYTECODE_VALUE_S8: {
+        result._s64 = 1;
+    } break;
+
+    case BYTECODE_VALUE_U64:
+    case BYTECODE_VALUE_U32:
+    case BYTECODE_VALUE_U16:
+    case BYTECODE_VALUE_U8: {
+        result._u64 = 1;
+    } break;
+
+    case BYTECODE_VALUE_F64:
+    case BYTECODE_VALUE_F32: {
+        result._f64 = 1.0f;
+    } break;
+
+    case BYTECODE_VALUE_POINTER: {
+        result.ptr = (void *) 0x1;
+    } break;
+
+    default: {
+    } break;
+    }
+
+    result.kind = value.kind;
+
+    return result;
+}
+
 void bytecode_value_neg(struct bytecode_value *result)
 {
     switch (result->kind) {
