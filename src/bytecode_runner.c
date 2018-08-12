@@ -67,10 +67,10 @@ int main(int argc, char **argv)
 {
     double a = 22.3f;
     double b =  3.2f;
-    double c =  10.499999f;
+    double c = 10.499999f;
 
-    int64_t d = 1;
-    int64_t e = 3;
+    int64_t d =  1;
+    int64_t e =  3;
     int64_t f = -5;
 
     uint64_t program[] = {
