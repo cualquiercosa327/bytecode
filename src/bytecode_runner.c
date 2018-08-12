@@ -43,8 +43,11 @@ void bytecode_runner_run(struct bytecode_runner *bcr, uint64_t *program)
         uint64_t raw_instr = fetch_instruction(bcr);
         struct bytecode_instruction instr = decode_instruction(raw_instr);
 
-        printf("cycle %3" PRIu64 ": op = %2X, r1 = %2d, r2 = %2d\n",
-                ++bcr->cycle_count, instr.op, instr.r1, instr.r2);
+        printf("cycle %3" PRIu64 ": op = %-15s r1 = %s, r2 = %s\n",
+                ++bcr->cycle_count,
+                bytecode_opcode_str[instr.op],
+                bytecode_register_str[instr.r1],
+                bytecode_register_str[instr.r2]);
 
         execute_instruction(bcr, instr);
 
