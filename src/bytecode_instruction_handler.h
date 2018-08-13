@@ -38,5 +38,7 @@ bytecode_instruction_handler_(exec_op_store_local_imm);
 bytecode_instruction_handler_(exec_op_store_local_reg);
 bytecode_instruction_handler_(exec_op_load_local_imm);
 bytecode_instruction_handler_(exec_op_load_local_reg);
+bytecode_instruction_handler_(exec_op_lea_reg_imm);
+bytecode_instruction_handler_(exec_op_lea_reg_reg);
 
 #endif

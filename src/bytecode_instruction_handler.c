@@ -220,3 +220,17 @@ bytecode_instruction_handler_(exec_op_load_local_reg)
 {
     bcr->reg[reg1] = bcr->stack[bcr->reg[BYTECODE_REGISTER_RBP]._u64 + bcr->reg[reg2]._u64];
 }
+
+bytecode_instruction_handler_(exec_op_lea_reg_imm)
+{
+    uint64_t constant = fetch_instruction(bcr);
+    struct bytecode_value u64_constant = bytecode_value_create_u64(constant);
+    char *effective_address = bcr->data + u64_constant._u64;
+    assert(effective_address < bcr->data + bcr->data_size);
+    bcr->reg[reg1] = bytecode_value_create_ptr((uint64_t)effective_address);
+}
+
+bytecode_instruction_handler_(exec_op_lea_reg_reg)
+{
+    bcr->reg[reg1] = bytecode_value_create_ptr(bcr->reg[reg2]._u64);
+}

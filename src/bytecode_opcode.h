@@ -46,6 +46,9 @@ enum bytecode_opcode
     BYTECODE_OPCODE_LOAD_LOCAL_IMM    = 0x64,
     BYTECODE_OPCODE_LOAD_LOCAL_REG    = 0x65,
 
+    BYTECODE_OPCODE_LEA_REG_IMM       = 0x66,
+    BYTECODE_OPCODE_LEA_REG_REG       = 0x67,
+
     BYTECODE_OPCODE_NOP               = 0xFF,
 
     BYTECODE_OPCODE_COUNT             = 0x100
@@ -95,6 +98,9 @@ static const char *bytecode_opcode_str[BYTECODE_OPCODE_COUNT] =
     [0x63] = "STORE_LOCAL_REG",
     [0x64] = "LOAD_LOCAL_IMM",
     [0x65] = "LOAD_LOCAL_REG",
+
+    [0x66] = "LEA_REG_IMM",
+    [0x67] = "LEA_REG_REG",
 
     [0xFF] = "NOP"
 };

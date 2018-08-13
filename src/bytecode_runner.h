@@ -64,6 +64,9 @@ struct bytecode_runner
     bool is_running;
     uint64_t cycle_count;
 
+    char *data;
+    uint32_t data_size;
+
     uint64_t *text;
     uint32_t stack_size;
     struct bytecode_value *stack;
@@ -71,10 +74,12 @@ struct bytecode_runner
     struct bytecode_value reg[BYTECODE_REGISTER_COUNT];
 };
 
-void bytecode_runner_init(struct bytecode_runner *bcr);
+struct bytecode_executable;
+
+void bytecode_runner_init(struct bytecode_runner *bcr, struct bytecode_executable *program);
 void bytecode_runner_destroy(struct bytecode_runner *bcr);
 
-void bytecode_runner_run(struct bytecode_runner *bcr, uint64_t *program);
+void bytecode_runner_run(struct bytecode_runner *bcr);
 struct bytecode_value bytecode_runner_result(struct bytecode_runner *bcr);
 
 void bytecode_runner_push_stack(struct bytecode_runner *bcr, struct bytecode_value value);

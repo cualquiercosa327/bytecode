@@ -10,17 +10,25 @@
 #include "bytecode_instruction_handler.h"
 #include "bytecode_instruction_handler.c"
 
+#include "bytecode_executable.h"
+
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 #include <getopt.h>
 
-void bytecode_runner_init(struct bytecode_runner *bcr)
+void bytecode_runner_init(struct bytecode_runner *bcr, struct bytecode_executable *program)
 {
     bcr->cycle_count = 0;
-    bcr->stack_size = 200;
+
+    bcr->text = program->text_segment;
+    bcr->data = program->data_segment;
+    bcr->data_size = program->header.data_size;
+
+    bcr->stack_size = program->header.stack_size;
     bcr->stack = malloc(bcr->stack_size * sizeof(struct bytecode_value));
+
     bcr->reg[BYTECODE_REGISTER_RIP] = bytecode_value_create_u64(0);
     bcr->reg[BYTECODE_REGISTER_RSP] = bytecode_value_create_u64(0);
 }
@@ -31,11 +39,9 @@ void bytecode_runner_destroy(struct bytecode_runner *bcr)
     memset(bcr, 0, sizeof(struct bytecode_runner));
 }
 
-void bytecode_runner_run(struct bytecode_runner *bcr, uint64_t *program)
+void bytecode_runner_run(struct bytecode_runner *bcr)
 {
-    bcr->text = program;
     bcr->is_running = true;
-
     while (bcr->is_running) {
         bytecode_runner_print_registers(bcr);
         bytecode_runner_print_stack(bcr);
@@ -143,7 +149,11 @@ int main(int argc, char **argv)
     uint64_t __main = 4;
     uint64_t __add_floats = 35;
 
-    uint64_t program[] = {
+    char program_data[] = {
+        'h','e','l','l','o','\0'
+    };
+
+    uint64_t program_text[] = {
         movi_reg_imm(BYTECODE_REGISTER_RAX, __main),
         call_reg(BYTECODE_REGISTER_RAX),
         halt(),
@@ -170,19 +180,31 @@ int main(int argc, char **argv)
         enter(),
         mov_reg_reg(BYTECODE_REGISTER_RAX, BYTECODE_REGISTER_RDI),
         add_reg_reg(BYTECODE_REGISTER_RAX, BYTECODE_REGISTER_RSI),
+        lea_reg_imm(BYTECODE_REGISTER_RAX, 0),
         leave(),
+    };
+
+    struct bytecode_executable program = {
+        .header = {
+            .stack_size = 200,
+            .data_size = sizeof(program_data)
+        },
+        .data_segment = program_data,
+        .text_segment = program_text
     };
 
     struct bytecode_runner bcr = {};
     parse_arguments(argc, argv, &bcr);
-    bytecode_runner_init(&bcr);
-    bytecode_runner_run(&bcr, program);
+    bytecode_runner_init(&bcr, &program);
+    bytecode_runner_run(&bcr);
     struct bytecode_value result = bytecode_runner_result(&bcr);
     bytecode_runner_destroy(&bcr);
 
     printf("result = ");
     bytecode_value_print(stdout, &result);
     printf("\n");
+
+    printf("%s\n", (char *) result.ptr);
 
     return 0;
 }
