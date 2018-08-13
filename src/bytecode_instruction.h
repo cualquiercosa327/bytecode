@@ -54,6 +54,7 @@ uint64_t encode_instruction_r2(uint8_t instr, uint8_t r1, uint8_t r2);
 
 #define call_imm(val) encode_instruction(BYTECODE_OPCODE_CALL_IMM), val
 #define call_reg(reg) encode_instruction_r1(BYTECODE_OPCODE_CALL_REG, reg)
+#define call_foreign(sym, lib, reg_arg_count, ret_type) encode_instruction(BYTECODE_OPCODE_CALL_FOREIGN), sym, lib, reg_arg_count, ret_type
 
 #define enter() encode_instruction(BYTECODE_OPCODE_ENTER)
 #define leave() encode_instruction(BYTECODE_OPCODE_LEAVE)

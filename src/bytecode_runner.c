@@ -48,15 +48,9 @@ void bytecode_runner_run(struct bytecode_runner *bcr)
 
         uint64_t raw_instr = fetch_instruction(bcr);
         struct bytecode_instruction instr = decode_instruction(raw_instr);
-
-        printf("cycle %3" PRIu64 ": op = %-15s r1 = %s, r2 = %s\n",
-                ++bcr->cycle_count,
-                bytecode_opcode_str[instr.op],
-                bytecode_register_str[instr.r1],
-                bytecode_register_str[instr.r2]);
+        bytecode_runner_print_instruction(bcr, &instr);
 
         execute_instruction(bcr, instr);
-
         if (bcr->single_step) getchar();
     }
 }
@@ -117,6 +111,17 @@ void bytecode_runner_print_stack(struct bytecode_runner *bcr)
     printf("]\n");
 }
 
+void bytecode_runner_print_instruction(struct bytecode_runner *bcr, struct bytecode_instruction *instr)
+{
+    if (!bcr->verbose) return;
+
+    printf("cycle %3" PRIu64 ": op = %-15s r1 = %s, r2 = %s\n",
+            ++bcr->cycle_count,
+            bytecode_opcode_str[instr->op],
+            bytecode_register_str[instr->r1],
+            bytecode_register_str[instr->r2]);
+}
+
 void parse_arguments(int argc, char **argv, struct bytecode_runner *bcr)
 {
     const char *short_opt = "vd";
@@ -150,7 +155,9 @@ int main(int argc, char **argv)
     uint64_t __add_floats = 35;
 
     char program_data[] = {
-        'h','e','l','l','o','\0'
+        'h','e','l','l','o','\n', '\0',
+        'p','r','i','n','t','f','\0',
+        '/','u','s','r','/','l','i','b','/','l','i','b','c','.','d','y','l','i','b','\0'
     };
 
     uint64_t program_text[] = {
@@ -180,7 +187,8 @@ int main(int argc, char **argv)
         enter(),
         mov_reg_reg(BYTECODE_REGISTER_RAX, BYTECODE_REGISTER_RDI),
         add_reg_reg(BYTECODE_REGISTER_RAX, BYTECODE_REGISTER_RSI),
-        lea_reg_imm(BYTECODE_REGISTER_RAX, 0),
+        lea_reg_imm(BYTECODE_REGISTER_RDI, 0),
+        call_foreign(7, 14, 1, BYTECODE_VALUE_S32),
         leave(),
     };
 
@@ -199,12 +207,6 @@ int main(int argc, char **argv)
     bytecode_runner_run(&bcr);
     struct bytecode_value result = bytecode_runner_result(&bcr);
     bytecode_runner_destroy(&bcr);
-
-    printf("result = ");
-    bytecode_value_print(stdout, &result);
-    printf("\n");
-
-    printf("%s\n", (char *) result.ptr);
 
     return 0;
 }

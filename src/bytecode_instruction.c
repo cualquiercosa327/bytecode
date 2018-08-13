@@ -41,6 +41,7 @@ static bytecode_instruction_handler *instruction_handlers[BYTECODE_OPCODE_COUNT]
 
     [BYTECODE_OPCODE_CALL_IMM]          = exec_op_call_imm,
     [BYTECODE_OPCODE_CALL_REG]          = exec_op_call_reg,
+    [BYTECODE_OPCODE_CALL_FOREIGN]      = exec_op_call_foreign,
 
     [BYTECODE_OPCODE_ENTER]             = exec_op_enter,
     [BYTECODE_OPCODE_LEAVE]             = exec_op_leave,

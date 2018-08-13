@@ -2,6 +2,8 @@
 #include "bytecode_runner.h"
 #include "bytecode_value.h"
 
+#include <dlfcn.h>
+#include <dyncall.h>
 #include <assert.h>
 
 bytecode_instruction_handler_(exec_op_halt)
@@ -182,6 +184,97 @@ bytecode_instruction_handler_(exec_op_call_reg)
 {
     bytecode_runner_push_stack(bcr, bcr->reg[BYTECODE_REGISTER_RIP]);
     bcr->reg[BYTECODE_REGISTER_RIP] = bcr->reg[reg1];
+}
+
+bytecode_instruction_handler_(exec_op_call_foreign)
+{
+    uint64_t sym_constant = fetch_instruction(bcr);
+    char *sym_name = bcr->data + sym_constant;
+    assert(sym_name < bcr->data + bcr->data_size);
+
+    uint64_t lib_constant = fetch_instruction(bcr);
+    char *lib_name = bcr->data + lib_constant;
+    assert(lib_name < bcr->data + bcr->data_size);
+
+    uint64_t reg_arg_count = fetch_instruction(bcr);
+    uint64_t ret_kind = fetch_instruction(bcr);
+
+    void *handle = dlopen(lib_name, RTLD_LAZY);
+    assert(handle);
+
+    void *func = dlsym(handle, sym_name);
+    assert(func);
+
+    DCCallVM *vm = dcNewCallVM(4096);
+    dcMode(vm, DC_CALL_C_DEFAULT);
+    dcReset(vm);
+
+    for (unsigned i = 0; i < reg_arg_count; ++i) {
+        struct bytecode_value *reg = &bcr->reg[bytecode_call_registers[i]];
+        switch (reg->kind) {
+        case BYTECODE_VALUE_S64:
+        case BYTECODE_VALUE_U64: {
+            dcArgLongLong(vm, reg->_s64);
+        } break;
+        case BYTECODE_VALUE_S32:
+        case BYTECODE_VALUE_U32: {
+            dcArgInt(vm, reg->_s64);
+        } break;
+        case BYTECODE_VALUE_S16:
+        case BYTECODE_VALUE_U16: {
+            dcArgShort(vm, reg->_s16);
+        } break;
+        case BYTECODE_VALUE_F64: {
+            dcArgDouble(vm, reg->_f64);
+        } break;
+        case BYTECODE_VALUE_F32: {
+            dcArgFloat(vm, reg->_f64);
+        } break;
+        case BYTECODE_VALUE_S8:
+        case BYTECODE_VALUE_U8: {
+            dcArgChar(vm, reg->_s8);
+        } break;
+        case BYTECODE_VALUE_POINTER: {
+            dcArgPointer(vm, reg->ptr);
+        } break;
+        default: {
+        } break;
+        }
+    }
+
+    switch (ret_kind) {
+    case BYTECODE_VALUE_S64:
+    case BYTECODE_VALUE_U64: {
+        bcr->reg[BYTECODE_REGISTER_RAX] = bytecode_value_create_s64(dcCallLongLong(vm, func));
+    } break;
+    case BYTECODE_VALUE_S32:
+    case BYTECODE_VALUE_U32: {
+        bcr->reg[BYTECODE_REGISTER_RAX] = bytecode_value_create_s32(dcCallInt(vm, func));
+    } break;
+    case BYTECODE_VALUE_S16:
+    case BYTECODE_VALUE_U16: {
+        bcr->reg[BYTECODE_REGISTER_RAX] = bytecode_value_create_s16(dcCallShort(vm, func));
+    } break;
+    case BYTECODE_VALUE_S8:
+    case BYTECODE_VALUE_U8: {
+        bcr->reg[BYTECODE_REGISTER_RAX] = bytecode_value_create_s8(dcCallChar(vm, func));
+    } break;
+    case BYTECODE_VALUE_F64: {
+        bcr->reg[BYTECODE_REGISTER_RAX] = bytecode_value_create_f64(dcCallDouble(vm, func));
+    } break;
+    case BYTECODE_VALUE_F32: {
+        bcr->reg[BYTECODE_REGISTER_RAX] = bytecode_value_create_f32(dcCallFloat(vm, func));
+    } break;
+    case BYTECODE_VALUE_POINTER: {
+        bcr->reg[BYTECODE_REGISTER_RAX] = bytecode_value_create_ptr((uint64_t)dcCallPointer(vm, func));
+    } break;
+    default: {
+        dcCallVoid(vm, func);
+    } break;
+    }
+
+    dcFree(vm);
+    dlclose(handle);
 }
 
 bytecode_instruction_handler_(exec_op_enter)

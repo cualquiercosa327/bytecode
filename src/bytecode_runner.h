@@ -56,6 +56,22 @@ enum bytecode_register
     BYTECODE_REGISTER_COUNT
 };
 
+static enum bytecode_register bytecode_call_registers[] =
+{
+    BYTECODE_REGISTER_RDI,
+    BYTECODE_REGISTER_RSI,
+    BYTECODE_REGISTER_RDX,
+    BYTECODE_REGISTER_RCX,
+    BYTECODE_REGISTER_R8,
+    BYTECODE_REGISTER_R9,
+    BYTECODE_REGISTER_R10,
+    BYTECODE_REGISTER_R11,
+    BYTECODE_REGISTER_R12,
+    BYTECODE_REGISTER_R13,
+    BYTECODE_REGISTER_R14,
+    BYTECODE_REGISTER_R15,
+};
+
 struct bytecode_runner
 {
     bool verbose;
@@ -74,6 +90,7 @@ struct bytecode_runner
     struct bytecode_value reg[BYTECODE_REGISTER_COUNT];
 };
 
+struct bytecode_instruction;
 struct bytecode_executable;
 
 void bytecode_runner_init(struct bytecode_runner *bcr, struct bytecode_executable *program);
@@ -87,5 +104,6 @@ struct bytecode_value bytecode_runner_pop_stack(struct bytecode_runner *bcr);
 
 void bytecode_runner_print_registers(struct bytecode_runner *bcr);
 void bytecode_runner_print_stack(struct bytecode_runner *bcr);
+void bytecode_runner_print_instruction(struct bytecode_runner *bcr, struct bytecode_instruction *instr);
 
 #endif
