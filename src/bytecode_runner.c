@@ -155,7 +155,7 @@ int main(int argc, char **argv)
     uint64_t __add_floats = 35;
 
     char program_data[] = {
-        'h','e','l','l','o','\n', '\0',
+        'h','e','l','l','o','\n','\0',
         'p','r','i','n','t','f','\0',
         '/','u','s','r','/','l','i','b','/','l','i','b','c','.','d','y','l','i','b','\0'
     };
@@ -208,5 +208,6 @@ int main(int argc, char **argv)
     struct bytecode_value result = bytecode_runner_result(&bcr);
     bytecode_runner_destroy(&bcr);
 
-    return 0;
+    printf("exit(%d)\n", result._u32);
+    return result._u32;
 }
