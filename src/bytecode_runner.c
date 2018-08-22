@@ -210,6 +210,5 @@ int main(int argc, char **argv)
     struct bytecode_value result = bytecode_runner_result(&bcr);
     bytecode_runner_destroy(&bcr);
 
-    printf("exit(%d)\n", result._u32);
     return result._u32;
 }
