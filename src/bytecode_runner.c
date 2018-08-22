@@ -126,11 +126,11 @@ void bytecode_runner_print_instruction(struct bytecode_runner *bcr, struct bytec
 static int bcr_sample_exe = 1;
 void parse_arguments(int argc, char **argv, struct bytecode_runner *bcr)
 {
-    const char *short_opt = "vde:";
+    const char *short_opt = "vds:";
     struct option long_opt[] = {
-        { "--verbose", no_argument, NULL, 'v' },
-        { "--debug", no_argument, NULL, 'd' },
-        { "--executable", required_argument, NULL, 'e' },
+        { "verbose", no_argument, NULL, 'v' },
+        { "debug", no_argument, NULL, 'd' },
+        { "sample", required_argument, NULL, 's' },
         { NULL, 0, NULL, 0 }
     };
 
@@ -144,7 +144,7 @@ void parse_arguments(int argc, char **argv, struct bytecode_runner *bcr)
             bcr->verbose = true;
             bcr->single_step = true;
         } break;
-        case 'e': {
+        case 's': {
             sscanf(optarg, "%d", &bcr_sample_exe);
         } break;
         }
