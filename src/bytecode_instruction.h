@@ -13,9 +13,7 @@ struct bytecode_instruction
     uint8_t r2;
 };
 
-void execute_instruction(struct bytecode_runner *bcr, struct bytecode_instruction instr);
 uint64_t fetch_instruction(struct bytecode_runner *bcr);
-
 struct bytecode_instruction decode_instruction(uint64_t raw_instr);
 uint64_t encode_instruction(uint8_t instr);
 uint64_t encode_instruction_r1(uint8_t instr, uint8_t r1);

@@ -3,6 +3,9 @@
 
 #include "bytecode_instruction.h"
 
+struct bytecode_runner;
+void bytecode_instruction_execute(struct bytecode_runner *bcr, struct bytecode_instruction instr);
+
 bytecode_instruction_handler_(exec_op_halt);
 bytecode_instruction_handler_(exec_op_nop);
 bytecode_instruction_handler_(exec_op_movu_reg_imm);
