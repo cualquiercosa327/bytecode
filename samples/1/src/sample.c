@@ -17,7 +17,7 @@ int main(int argc, char **argv)
     uint64_t __add_floats = 35;
 
     char program_data[] = {
-        'h','e','l','l','o','\n','\0',
+        'h','e','l','l','o',' ','w','o','r','l','d',' ','%','d','\n','\0',
         'p','r','i','n','t','f','\0',
         '/','u','s','r','/','l','i','b','/','l','i','b','c','.','d','y','l','i','b','\0'
     };
@@ -50,7 +50,8 @@ int main(int argc, char **argv)
         mov_reg_reg(BYTECODE_REGISTER_RAX, BYTECODE_REGISTER_RDI),
         add_reg_reg(BYTECODE_REGISTER_RAX, BYTECODE_REGISTER_RSI),
         lea_reg_imm(BYTECODE_REGISTER_RDI, 0),
-        call_foreign(7, 14, 1, BYTECODE_VALUE_S32),
+        movi_reg_imm(BYTECODE_REGISTER_RSI, 42),
+        call_foreign(16, 23, 2, BYTECODE_VALUE_S32),
         leave(),
     };
 
