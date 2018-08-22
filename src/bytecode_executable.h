@@ -19,7 +19,7 @@ struct bytecode_executable
 };
 #pragma pack(pop)
 
-bool write_bytecode_executable(const char *absolutepath, struct bytecode_executable exe);
-bool load_bytecode_executable(const char *absolutepath, struct bytecode_executable *exe);
+bool bytecode_write_executable(const char *absolutepath, struct bytecode_executable exe);
+bool bytecode_load_executable(const char *absolutepath, struct bytecode_executable *exe);
 
 #endif

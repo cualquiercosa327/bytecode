@@ -160,7 +160,7 @@ int main(int argc, char **argv)
     snprintf(exe_path, sizeof(exe_path), "./samples/%d/sample.bcr", bcr_sample_exe);
 
     struct bytecode_executable executable;
-    if (load_bytecode_executable(exe_path, &executable)) {
+    if (bytecode_load_executable(exe_path, &executable)) {
         bytecode_runner_init(&bcr, &executable);
         bytecode_runner_run(&bcr);
         struct bytecode_value result = bytecode_runner_result(&bcr);

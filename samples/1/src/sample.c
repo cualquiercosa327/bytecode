@@ -65,7 +65,7 @@ int main(int argc, char **argv)
         .text_segment = program_text
     };
 
-    if (write_bytecode_executable("./sample.bcr", program)) {
+    if (bytecode_write_executable("./sample.bcr", program)) {
         return EXIT_SUCCESS;
     }
 

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-bool write_bytecode_executable(const char *absolutepath, struct bytecode_executable exe)
+bool bytecode_write_executable(const char *absolutepath, struct bytecode_executable exe)
 {
     FILE *handle = fopen(absolutepath, "wb");
     if (!handle) return false;
@@ -16,7 +16,7 @@ bool write_bytecode_executable(const char *absolutepath, struct bytecode_executa
     return true;
 }
 
-bool load_bytecode_executable(const char *absolutepath, struct bytecode_executable *exe)
+bool bytecode_load_executable(const char *absolutepath, struct bytecode_executable *exe)
 {
     FILE *handle = fopen(absolutepath, "rb");
     if (!handle) return false;
