@@ -11,6 +11,7 @@
 #include "bytecode_instruction_handler.c"
 
 #include "bytecode_executable.h"
+#include "bytecode_executable.c"
 
 #include <stdio.h>
 #include <assert.h>
@@ -195,7 +196,8 @@ int main(int argc, char **argv)
     struct bytecode_executable program = {
         .header = {
             .stack_size = 200,
-            .data_size = sizeof(program_data)
+            .data_size = sizeof(program_data),
+            .text_size = sizeof(program_text)
         },
         .data_segment = program_data,
         .text_segment = program_text
