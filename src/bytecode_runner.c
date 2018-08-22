@@ -123,12 +123,14 @@ void bytecode_runner_print_instruction(struct bytecode_runner *bcr, struct bytec
             bytecode_register_str[instr->r2]);
 }
 
+static int bcr_sample_exe = 1;
 void parse_arguments(int argc, char **argv, struct bytecode_runner *bcr)
 {
-    const char *short_opt = "vd";
+    const char *short_opt = "vde:";
     struct option long_opt[] = {
         { "--verbose", no_argument, NULL, 'v' },
         { "--debug", no_argument, NULL, 'd' },
+        { "--executable", required_argument, NULL, 'e' },
         { NULL, 0, NULL, 0 }
     };
 
@@ -142,21 +144,29 @@ void parse_arguments(int argc, char **argv, struct bytecode_runner *bcr)
             bcr->verbose = true;
             bcr->single_step = true;
         } break;
+        case 'e': {
+            sscanf(optarg, "%d", &bcr_sample_exe);
+        } break;
         }
     }
 }
 
 int main(int argc, char **argv)
 {
+    struct bytecode_runner bcr = {};
+    parse_arguments(argc, argv, &bcr);
+
+    char exe_path[255] = {};
+    snprintf(exe_path, sizeof(exe_path), "./samples/%d/sample.bcr", bcr_sample_exe);
+
     struct bytecode_executable executable;
-    if (load_bytecode_executable("./samples/1/sample.bcr", &executable)) {
-        struct bytecode_runner bcr = {};
-        parse_arguments(argc, argv, &bcr);
+    if (load_bytecode_executable(exe_path, &executable)) {
         bytecode_runner_init(&bcr, &executable);
         bytecode_runner_run(&bcr);
         struct bytecode_value result = bytecode_runner_result(&bcr);
         bytecode_runner_destroy(&bcr);
         return result._u32;
     }
+
     return EXIT_FAILURE;
 }
