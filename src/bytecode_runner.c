@@ -25,9 +25,9 @@ void bytecode_runner_init(struct bytecode_runner *bcr, struct bytecode_executabl
 
     bcr->text = program->text_segment;
     bcr->data = program->data_segment;
-    bcr->data_size = program->header.data_size;
+    bcr->data_size = program->header->data_size;
 
-    bcr->stack_size = program->header.stack_size;
+    bcr->stack_size = program->header->stack_size;
     bcr->stack = malloc(bcr->stack_size * sizeof(struct bytecode_value));
 
     bcr->reg[BYTECODE_REGISTER_RIP] = bytecode_value_create_u64(0);

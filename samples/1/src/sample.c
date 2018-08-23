@@ -55,17 +55,21 @@ int main(int argc, char **argv)
         leave(),
     };
 
+    struct bytecode_header program_header = {
+        .magic = { 'b', 'c', 'r' },
+        .abi_version = 0x1,
+        .stack_size = 200,
+        .data_size = sizeof(program_data),
+        .text_size = sizeof(program_text)
+    };
+
     struct bytecode_executable program = {
-        .header = {
-            .stack_size = 200,
-            .data_size = sizeof(program_data),
-            .text_size = sizeof(program_text)
-        },
+        .header = &program_header,
         .data_segment = program_data,
         .text_segment = program_text
     };
 
-    if (bytecode_write_executable("./sample.bcr", program)) {
+    if (bytecode_write_executable("./sample.bcr", &program)) {
         return EXIT_SUCCESS;
     }
 
