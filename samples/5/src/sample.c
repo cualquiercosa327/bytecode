@@ -25,7 +25,8 @@ int main(int argc, char **argv)
      *     return n * factorial(n - 1);
      * }
      * main :: () -> int {
-     *     return factorial(5);
+     *     int num = 5;
+     *     return printf("%d factorial is %d\n", num, factorial(num));
      * }
      */
 
