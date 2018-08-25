@@ -176,6 +176,14 @@ static bytecode_instruction_handler *instruction_handlers[BYTECODE_OPCODE_COUNT]
     [BYTECODE_OPCODE_MUL_FLT64_REG_IMM]  = exec_op_mul_flt64_reg_imm,
     [BYTECODE_OPCODE_MUL_REG_REG]        = exec_op_mul_reg_reg,
 
+    [BYTECODE_OPCODE_DIV_INT8_REG_IMM]   = exec_op_div_int8_reg_imm,
+    [BYTECODE_OPCODE_DIV_INT16_REG_IMM]  = exec_op_div_int16_reg_imm,
+    [BYTECODE_OPCODE_DIV_INT32_REG_IMM]  = exec_op_div_int32_reg_imm,
+    [BYTECODE_OPCODE_DIV_INT64_REG_IMM]  = exec_op_div_int64_reg_imm,
+    [BYTECODE_OPCODE_DIV_FLT32_REG_IMM]  = exec_op_div_flt32_reg_imm,
+    [BYTECODE_OPCODE_DIV_FLT64_REG_IMM]  = exec_op_div_flt64_reg_imm,
+    [BYTECODE_OPCODE_DIV_REG_REG]        = exec_op_div_reg_reg,
+
     [BYTECODE_OPCODE_NEG_REG]            = exec_op_neg_reg,
     [BYTECODE_OPCODE_INC_REG]            = exec_op_inc_reg,
     [BYTECODE_OPCODE_DEC_REG]            = exec_op_dec_reg,
@@ -569,6 +577,42 @@ bytecode_instruction_handler_(exec_op_mul_reg_reg)
     bytecode_do_op(*=, bcr->reg[reg2]);
 }
 
+bytecode_instruction_handler_(exec_op_div_int8_reg_imm)
+{
+    uint64_t raw = fetch_instruction(bcr);
+    *as_i8_ptr(bcr->reg[reg1]) /= as_i8(raw);
+}
+bytecode_instruction_handler_(exec_op_div_int16_reg_imm)
+{
+    uint64_t raw = fetch_instruction(bcr);
+    *as_i16_ptr(bcr->reg[reg1]) /= as_i16(raw);
+}
+bytecode_instruction_handler_(exec_op_div_int32_reg_imm)
+{
+    uint64_t raw = fetch_instruction(bcr);
+    *as_i32_ptr(bcr->reg[reg1]) /= as_i32(raw);
+}
+bytecode_instruction_handler_(exec_op_div_int64_reg_imm)
+{
+    uint64_t raw = fetch_instruction(bcr);
+    *as_i64_ptr(bcr->reg[reg1]) /= as_i64(raw);
+}
+bytecode_instruction_handler_(exec_op_div_flt32_reg_imm)
+{
+    uint64_t raw = fetch_instruction(bcr);
+    *as_f32_ptr(bcr->reg[reg1]) /= as_f32(raw);
+}
+bytecode_instruction_handler_(exec_op_div_flt64_reg_imm)
+{
+    uint64_t raw = fetch_instruction(bcr);
+    *as_f64_ptr(bcr->reg[reg1]) /= as_f64(raw);
+}
+bytecode_instruction_handler_(exec_op_div_reg_reg)
+{
+    assert(bcr->reg_type[reg1] == bcr->reg_type[reg2]);
+    bytecode_do_op(/=, bcr->reg[reg2]);
+}
+
 bytecode_instruction_handler_(exec_op_neg_reg)
 {
     bytecode_do_op(= -, bcr->reg[reg1]);
@@ -666,7 +710,7 @@ bytecode_instruction_handler_(exec_op_call_foreign)
             dcArgDouble(vm, as_f64(reg));
         } break;
         case BYTECODE_REGISTER_KIND_F32: {
-            dcArgFloat(vm, as_f32(reg));
+            dcArgDouble(vm, as_f32(reg));
         } break;
         //case BYTECODE_VALUE_POINTER: {
             //dcArgPointer(vm, as_i64(reg));
