@@ -120,6 +120,16 @@ uint64_t encode_instruction_r2(uint8_t instr, uint8_t r1, uint8_t r2);
 #define memr_f32_reg_reg(reg1, reg2) encode_instruction_r2(BYTECODE_OPCODE_MEMR_FLT32_REG_REG, reg1, reg2)
 #define memr_f64_reg_reg(reg1, reg2) encode_instruction_r2(BYTECODE_OPCODE_MEMR_FLT64_REG_REG, reg1, reg2)
 
+#define test_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_TEST_REG_IMM, reg), val
+#define test_reg_reg(reg1, reg2) encode_instruction_r2(BYTECODE_OPCODE_TEST_REG_REG, reg1, reg2)
+
+#define cmp_reg_imm(reg, val) encode_instruction_r1(BYTECODE_OPCODE_CMP_REG_IMM, reg), val
+#define cmp_reg_reg(reg1, reg2) encode_instruction_r2(BYTECODE_OPCODE_CMP_REG_REG, reg1, reg2)
+
+#define jmp_imm(val) encode_instruction(BYTECODE_OPCODE_JMP_IMM), val
+#define jnz_imm(val) encode_instruction(BYTECODE_OPCODE_JNZ_IMM), val
+#define jz_imm(val) encode_instruction(BYTECODE_OPCODE_JZ_IMM), val
+
 #define nop() encode_instruction(BYTECODE_OPCODE_NOP)
 #define halt() encode_instruction(BYTECODE_OPCODE_HALT)
 
