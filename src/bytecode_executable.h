@@ -8,8 +8,8 @@ struct bytecode_header
 {
     uint8_t magic[3];
     uint8_t abi_version;
-    uint32_t stack_size;
-    uint32_t data_size;
+    uint64_t stack_size;
+    uint64_t data_size;
     uint64_t text_size;
 };
 

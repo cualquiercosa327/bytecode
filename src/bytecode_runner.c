@@ -1,9 +1,6 @@
 #include "bytecode_runner.h"
 #include "bytecode_opcode.h"
 
-#include "bytecode_value.h"
-#include "bytecode_value.c"
-
 #include "bytecode_instruction.h"
 #include "bytecode_instruction.c"
 
@@ -18,20 +15,30 @@
 #include <stdlib.h>
 #include <string.h>
 #include <getopt.h>
+#include <inttypes.h>
 
 void bytecode_runner_init(struct bytecode_runner *bcr, struct bytecode_executable *program)
 {
     bcr->cycle_count = 0;
 
     bcr->text = program->text_segment;
+    bcr->text_size = program->header->text_size;
+
     bcr->data = program->data_segment;
     bcr->data_size = program->header->data_size;
 
     bcr->stack_size = program->header->stack_size;
-    bcr->stack = malloc(bcr->stack_size * sizeof(struct bytecode_value));
+    bcr->stack = malloc(bcr->stack_size);
+    memset(bcr->stack, 0, bcr->stack_size);
 
-    bcr->reg[BYTECODE_REGISTER_RIP] = bytecode_value_create_u64(0);
-    bcr->reg[BYTECODE_REGISTER_RSP] = bytecode_value_create_u64(0);
+    bcr->reg[BYTECODE_REGISTER_RIP] = 0;
+    bcr->reg_type[BYTECODE_REGISTER_RIP] = BYTECODE_REGISTER_KIND_I64;
+
+    bcr->reg[BYTECODE_REGISTER_RSP] = 0;
+    bcr->reg_type[BYTECODE_REGISTER_RSP] = BYTECODE_REGISTER_KIND_I64;
+
+    bcr->reg[BYTECODE_REGISTER_RBP] = 0;
+    bcr->reg_type[BYTECODE_REGISTER_RBP] = BYTECODE_REGISTER_KIND_I64;
 }
 
 void bytecode_runner_destroy(struct bytecode_runner *bcr)
@@ -56,21 +63,13 @@ void bytecode_runner_run(struct bytecode_runner *bcr)
     }
 }
 
-struct bytecode_value bytecode_runner_result(struct bytecode_runner *bcr)
+struct bytecode_result bytecode_runner_result(struct bytecode_runner *bcr)
 {
-    return bcr->reg[BYTECODE_REGISTER_RAX];
-}
-
-void bytecode_runner_push_stack(struct bytecode_runner *bcr, struct bytecode_value value)
-{
-    bcr->stack[bcr->reg[BYTECODE_REGISTER_RSP]._u64++] = value;
-    assert(bcr->reg[BYTECODE_REGISTER_RSP]._u64 < bcr->stack_size);
-}
-
-struct bytecode_value bytecode_runner_pop_stack(struct bytecode_runner *bcr)
-{
-    assert(bcr->reg[BYTECODE_REGISTER_RSP]._u64 > 0);
-    return bcr->stack[--bcr->reg[BYTECODE_REGISTER_RSP]._u64];
+    struct bytecode_result result = {
+        .kind = bcr->reg_type[BYTECODE_REGISTER_RAX],
+        .i64 = bcr->reg[BYTECODE_REGISTER_RAX]
+    };
+    return result;
 }
 
 void bytecode_runner_print_registers(struct bytecode_runner *bcr)
@@ -84,7 +83,7 @@ void bytecode_runner_print_registers(struct bytecode_runner *bcr)
         if ((i % num_col) == 0) {
             printf("\n");
             for (int j = 1; j <= num_col; ++j) {
-                printf("%016llX ", bcr->reg[i - 1 - num_col + j]._u64);
+                printf("%016" PRIx64 " ", bcr->reg[i - 1 - num_col + j]);
             }
             printf("\n");
         }
@@ -93,7 +92,7 @@ void bytecode_runner_print_registers(struct bytecode_runner *bcr)
             int rem = i % num_col;
             printf("\n");
             for (int j = 1; j <= rem; ++j) {
-                printf("%016llX ", bcr->reg[i - 1 - rem + j]._u64);
+                printf("%016" PRIx64 " ", bcr->reg[i - 1 - rem + j]);
             }
             printf("\n");
         }
@@ -105,9 +104,8 @@ void bytecode_runner_print_stack(struct bytecode_runner *bcr)
     if (!bcr->verbose) return;
 
     printf("stack [ ");
-    for (int i = 0; i < bcr->reg[BYTECODE_REGISTER_RSP]._u64; ++i) {
-        bytecode_value_print(stdout, &bcr->stack[i]);
-        printf(" ");
+    for (int i = 0; i < bcr->reg[BYTECODE_REGISTER_RSP]; ++i) {
+        printf("%0X ", bcr->stack[i]);
     }
     printf("]\n");
 }
@@ -163,9 +161,33 @@ int main(int argc, char **argv)
     if (bytecode_load_executable(exe_path, &executable)) {
         bytecode_runner_init(&bcr, &executable);
         bytecode_runner_run(&bcr);
-        struct bytecode_value result = bytecode_runner_result(&bcr);
+        struct bytecode_result result = bytecode_runner_result(&bcr);
         bytecode_runner_destroy(&bcr);
-        return result._u32;
+
+        switch (result.kind) {
+        case BYTECODE_REGISTER_KIND_I64: {
+            printf("exit(%" PRId64 ")\n", result.i64);
+        } break;
+        case BYTECODE_REGISTER_KIND_I32: {
+            printf("exit(%" PRId32 ")\n", result.i32);
+        } break;
+        case BYTECODE_REGISTER_KIND_I16: {
+            printf("exit(%" PRId16 ")\n", result.i16);
+        } break;
+        case BYTECODE_REGISTER_KIND_I8: {
+            printf("exit(%" PRId8 ")\n", result.i8);
+        } break;
+        case BYTECODE_REGISTER_KIND_F64: {
+            printf("exit(%.2f)\n", result.f64);
+        } break;
+        case BYTECODE_REGISTER_KIND_F32: {
+            printf("exit(%.2f)\n", result.f32);
+        } break;
+        default: {
+        } break;
+        }
+
+        return result.i32;
     }
 
     return EXIT_FAILURE;

@@ -18,17 +18,22 @@ int main(int argc, char **argv)
     };
 
     uint64_t program_text[] = {
-        movi_reg_imm(BYTECODE_REGISTER_RAX, __main),
+        mov_i64_reg_imm(BYTECODE_REGISTER_RAX, __main),
         call_reg(BYTECODE_REGISTER_RAX),
         halt(),
-        enter(),
-        movi_reg_imm(BYTECODE_REGISTER_RSI, 7),
-        movi_reg_imm(BYTECODE_REGISTER_RDX, 4),
+        begin_call_frame(),
+        mov_i64_reg_imm(BYTECODE_REGISTER_RSI, 7),
+        mov_i64_reg_imm(BYTECODE_REGISTER_RDX, 4),
         mov_reg_reg(BYTECODE_REGISTER_RCX, BYTECODE_REGISTER_RSI),
         mul_reg_reg(BYTECODE_REGISTER_RCX, BYTECODE_REGISTER_RDX),
-        lea_reg_imm(BYTECODE_REGISTER_RDI, 0),
-        call_foreign(14, 21, 4, BYTECODE_VALUE_S32),
-        leave(),
+        lea_bss_reg_imm(BYTECODE_REGISTER_RDI, 0),
+        lea_bss_reg_imm(BYTECODE_REGISTER_R10, 21),
+        lea_bss_reg_imm(BYTECODE_REGISTER_R11, 14),
+        push_reg(BYTECODE_REGISTER_R10),
+        push_reg(BYTECODE_REGISTER_R11),
+        call_foreign(4, BYTECODE_REGISTER_KIND_I32),
+        end_call_frame(),
+        ret()
     };
 
     struct bytecode_header program_header = {

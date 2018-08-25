@@ -1,10 +1,19 @@
 #ifndef BYTECODE_RUNNER_H
 #define BYTECODE_RUNNER_H
 
-#include "bytecode_value.h"
-
 #include <stdint.h>
 #include <stdbool.h>
+
+enum bytecode_register_kind
+{
+    BYTECODE_REGISTER_KIND_I64 = 0,
+    BYTECODE_REGISTER_KIND_I32 = 1,
+    BYTECODE_REGISTER_KIND_I16 = 2,
+    BYTECODE_REGISTER_KIND_I8  = 3,
+    BYTECODE_REGISTER_KIND_F64 = 4,
+    BYTECODE_REGISTER_KIND_F32 = 5,
+    BYTECODE_REGISTER_KIND_NON = 6,
+};
 
 static const char *bytecode_register_str[] =
 {
@@ -81,13 +90,31 @@ struct bytecode_runner
     uint64_t cycle_count;
 
     char *data;
-    uint32_t data_size;
+    uint64_t data_size;
 
     uint64_t *text;
-    uint32_t stack_size;
-    struct bytecode_value *stack;
+    uint64_t text_size;
 
-    struct bytecode_value reg[BYTECODE_REGISTER_COUNT];
+    uint64_t stack_size;
+    char *stack;
+
+    uint64_t reg[BYTECODE_REGISTER_COUNT];
+    uint64_t reg_type[BYTECODE_REGISTER_COUNT];
+};
+
+struct bytecode_result
+{
+    enum bytecode_register_kind kind;
+    union
+    {
+        uint8_t i8;
+        uint16_t i16;
+        uint32_t i32;
+        uint64_t i64;
+
+        float f32;
+        double f64;
+    };
 };
 
 struct bytecode_instruction;
@@ -97,10 +124,7 @@ void bytecode_runner_init(struct bytecode_runner *bcr, struct bytecode_executabl
 void bytecode_runner_destroy(struct bytecode_runner *bcr);
 
 void bytecode_runner_run(struct bytecode_runner *bcr);
-struct bytecode_value bytecode_runner_result(struct bytecode_runner *bcr);
-
-void bytecode_runner_push_stack(struct bytecode_runner *bcr, struct bytecode_value value);
-struct bytecode_value bytecode_runner_pop_stack(struct bytecode_runner *bcr);
+struct bytecode_result bytecode_runner_result(struct bytecode_runner *bcr);
 
 void bytecode_runner_print_registers(struct bytecode_runner *bcr);
 void bytecode_runner_print_stack(struct bytecode_runner *bcr);

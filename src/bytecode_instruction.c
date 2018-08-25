@@ -7,7 +7,7 @@
 
 uint64_t fetch_instruction(struct bytecode_runner *bcr)
 {
-    return bcr->text[bcr->reg[BYTECODE_REGISTER_RIP]._u64++];
+    return bcr->text[bcr->reg[BYTECODE_REGISTER_RIP]++];
 }
 
 struct bytecode_instruction decode_instruction(uint64_t raw_instr)
