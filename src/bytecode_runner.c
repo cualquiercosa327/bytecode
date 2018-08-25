@@ -19,6 +19,7 @@
 
 void bytecode_runner_init(struct bytecode_runner *bcr, struct bytecode_executable *program)
 {
+    bcr->flags = 0;
     bcr->cycle_count = 0;
 
     bcr->text = program->text_segment;
@@ -31,14 +32,8 @@ void bytecode_runner_init(struct bytecode_runner *bcr, struct bytecode_executabl
     bcr->stack = malloc(bcr->stack_size);
     memset(bcr->stack, 0, bcr->stack_size);
 
-    bcr->reg[BYTECODE_REGISTER_RIP] = 0;
-    bcr->reg_type[BYTECODE_REGISTER_RIP] = BYTECODE_REGISTER_KIND_I64;
-
-    bcr->reg[BYTECODE_REGISTER_RSP] = 0;
-    bcr->reg_type[BYTECODE_REGISTER_RSP] = BYTECODE_REGISTER_KIND_I64;
-
-    bcr->reg[BYTECODE_REGISTER_RBP] = 0;
-    bcr->reg_type[BYTECODE_REGISTER_RBP] = BYTECODE_REGISTER_KIND_I64;
+    memset(bcr->reg, 0, sizeof(uint64_t) * BYTECODE_REGISTER_COUNT);
+    memset(bcr->reg_type, BYTECODE_REGISTER_KIND_I64, sizeof(uint64_t) * BYTECODE_REGISTER_COUNT);
 }
 
 void bytecode_runner_destroy(struct bytecode_runner *bcr)
@@ -52,6 +47,7 @@ void bytecode_runner_run(struct bytecode_runner *bcr)
     bcr->is_running = true;
     while (bcr->is_running) {
         bytecode_runner_print_registers(bcr);
+        bytecode_runner_print_flags(bcr);
         bytecode_runner_print_stack(bcr);
 
         uint64_t raw_instr = fetch_instruction(bcr);
@@ -60,6 +56,15 @@ void bytecode_runner_run(struct bytecode_runner *bcr)
 
         bytecode_instruction_execute(bcr, instr);
         if (bcr->single_step) getchar();
+    }
+}
+
+void bytecode_runner_set_zero_flag(struct bytecode_runner *bcr, int value)
+{
+    if (value == 0) {
+        bcr->flags |= BYTECODE_FLAG_ZERO;
+    } else {
+        bcr->flags &= ~BYTECODE_FLAG_ZERO;
     }
 }
 
@@ -108,6 +113,17 @@ void bytecode_runner_print_stack(struct bytecode_runner *bcr)
         printf("%0X ", bcr->stack[i]);
     }
     printf("]\n");
+}
+
+void bytecode_runner_print_flags(struct bytecode_runner *bcr)
+{
+    if (!bcr->verbose) return;
+
+    printf("%8s\n", "osz");
+    for (int bit = 7; bit >= 0; --bit) {
+        printf("%c", ((bcr->flags & (1 << bit)) != 0) ? '1' : '0');
+    }
+    printf("\n");
 }
 
 void bytecode_runner_print_instruction(struct bytecode_runner *bcr, struct bytecode_instruction *instr)

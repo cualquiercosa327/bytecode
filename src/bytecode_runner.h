@@ -81,6 +81,11 @@ static enum bytecode_register bytecode_call_registers[] =
     BYTECODE_REGISTER_R15,
 };
 
+enum bytecode_flags
+{
+    BYTECODE_FLAG_ZERO = 1 << 0,
+};
+
 struct bytecode_runner
 {
     bool verbose;
@@ -100,6 +105,7 @@ struct bytecode_runner
 
     uint64_t reg[BYTECODE_REGISTER_COUNT];
     uint64_t reg_type[BYTECODE_REGISTER_COUNT];
+    uint8_t flags;
 };
 
 struct bytecode_result
@@ -126,8 +132,11 @@ void bytecode_runner_destroy(struct bytecode_runner *bcr);
 void bytecode_runner_run(struct bytecode_runner *bcr);
 struct bytecode_result bytecode_runner_result(struct bytecode_runner *bcr);
 
+void bytecode_runner_set_zero_flag(struct bytecode_runner *bcr, int value);
+
 void bytecode_runner_print_registers(struct bytecode_runner *bcr);
 void bytecode_runner_print_stack(struct bytecode_runner *bcr);
+void bytecode_runner_print_flags(struct bytecode_runner *bcr);
 void bytecode_runner_print_instruction(struct bytecode_runner *bcr, struct bytecode_instruction *instr);
 
 #endif

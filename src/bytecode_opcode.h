@@ -78,6 +78,14 @@ enum bytecode_opcode
     BYTECODE_OPCODE_DEC_REG            = 0x42,
     BYTECODE_OPCODE_XOR_REG_REG        = 0x43,
 
+    BYTECODE_OPCODE_TEST_REG_IMM       = 0x44,
+    BYTECODE_OPCODE_TEST_REG_REG       = 0x45,
+    BYTECODE_OPCODE_CMP_REG_IMM        = 0x46,
+    BYTECODE_OPCODE_CMP_REG_REG        = 0x47,
+    BYTECODE_OPCODE_JMP_IMM            = 0x48,
+    BYTECODE_OPCODE_JNZ_IMM            = 0x49,
+    BYTECODE_OPCODE_JZ_IMM             = 0x4A,
+
     BYTECODE_OPCODE_CALL_IMM           = 0x50,
     BYTECODE_OPCODE_CALL_REG           = 0x51,
     BYTECODE_OPCODE_CALL_FOREIGN       = 0x52,
@@ -186,6 +194,14 @@ static const char *bytecode_opcode_str[BYTECODE_OPCODE_COUNT] =
     [0x41] = "INC_REG",
     [0x42] = "DEC_REG",
     [0x43] = "XOR_REG_REG",
+
+    [0x44] = "TEST_REG_IMM",
+    [0x45] = "TEST_REG_REG",
+    [0x46] = "CMP_REG_IMM",
+    [0x47] = "CMP_REG_REG",
+    [0x48] = "JMP_IMM",
+    [0x49] = "JNZ_IMM",
+    [0x4A] = "JZ_IMM",
 
     [0x50] = "CALL_IMM",
     [0x51] = "CALL_REG",
