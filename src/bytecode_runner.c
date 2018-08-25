@@ -17,6 +17,16 @@
 #include <getopt.h>
 #include <inttypes.h>
 
+#include <time.h>
+
+#define BEGIN_TIMED_BLOCK(note) \
+        char *timed_note = note; \
+        clock_t timed_block_begin = clock()
+#define END_TIMED_BLOCK() \
+        clock_t timed_block_end = clock(); \
+        double timed_block_elapsed = ((timed_block_end - timed_block_begin) / (double)CLOCKS_PER_SEC) * 1000.0f; \
+        printf("%s %.4fms\n", timed_note, timed_block_elapsed)
+
 void bytecode_runner_init(struct bytecode_runner *bcr, struct bytecode_executable *program)
 {
     bcr->flags = 0;
@@ -176,32 +186,13 @@ int main(int argc, char **argv)
     struct bytecode_executable executable;
     if (bytecode_load_executable(exe_path, &executable)) {
         bytecode_runner_init(&bcr, &executable);
+
+        BEGIN_TIMED_BLOCK("program exited after");
         bytecode_runner_run(&bcr);
+        END_TIMED_BLOCK();
+
         struct bytecode_result result = bytecode_runner_result(&bcr);
         bytecode_runner_destroy(&bcr);
-
-        switch (result.kind) {
-        case BYTECODE_REGISTER_KIND_I64: {
-            printf("exit(%" PRId64 ")\n", result.i64);
-        } break;
-        case BYTECODE_REGISTER_KIND_I32: {
-            printf("exit(%" PRId32 ")\n", result.i32);
-        } break;
-        case BYTECODE_REGISTER_KIND_I16: {
-            printf("exit(%" PRId16 ")\n", result.i16);
-        } break;
-        case BYTECODE_REGISTER_KIND_I8: {
-            printf("exit(%" PRId8 ")\n", result.i8);
-        } break;
-        case BYTECODE_REGISTER_KIND_F64: {
-            printf("exit(%.2f)\n", result.f64);
-        } break;
-        case BYTECODE_REGISTER_KIND_F32: {
-            printf("exit(%.2f)\n", result.f32);
-        } break;
-        default: {
-        } break;
-        }
 
         return result.i32;
     }
