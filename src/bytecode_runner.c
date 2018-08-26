@@ -75,12 +75,26 @@ void bytecode_runner_run(struct bytecode_runner *bcr)
     printf("program exited after: %.4fms\n", timed_block_elapsed);
 }
 
-void bytecode_runner_set_zero_flag(struct bytecode_runner *bcr, int value)
+void bytecode_runner_set_flags(struct bytecode_runner *bcr, int64_t x, int64_t y)
 {
+    int64_t value = y - x;
+
+    if ((y > 0 && x > INT64_MAX - y) || (y < 0 && x < INT64_MIN - y)) {
+        bcr->flags |= BYTECODE_FLAG_OVERFLOW;
+    } else {
+        bcr->flags &= ~BYTECODE_FLAG_OVERFLOW;
+    }
+
     if (value == 0) {
         bcr->flags |= BYTECODE_FLAG_ZERO;
     } else {
         bcr->flags &= ~BYTECODE_FLAG_ZERO;
+    }
+
+    if (value & 0xf) {
+        bcr->flags |= BYTECODE_FLAG_SIGN;
+    } else {
+        bcr->flags &= ~BYTECODE_FLAG_SIGN;
     }
 }
 

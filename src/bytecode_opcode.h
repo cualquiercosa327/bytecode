@@ -86,6 +86,10 @@ enum bytecode_opcode
     BYTECODE_OPCODE_JMP_IMM            = 0x48,
     BYTECODE_OPCODE_JNZ_IMM            = 0x49,
     BYTECODE_OPCODE_JZ_IMM             = 0x4A,
+    BYTECODE_OPCODE_JLE_IMM            = 0x4B,
+    BYTECODE_OPCODE_JL_IMM             = 0x4C,
+    BYTECODE_OPCODE_JGE_IMM            = 0x4D,
+    BYTECODE_OPCODE_JG_IMM             = 0x4E,
 
     BYTECODE_OPCODE_CALL_IMM           = 0x50,
     BYTECODE_OPCODE_CALL_REG           = 0x51,
@@ -204,6 +208,10 @@ static const char *bytecode_opcode_str[BYTECODE_OPCODE_COUNT] =
     [0x48] = "JMP_IMM",
     [0x49] = "JNZ_IMM",
     [0x4A] = "JZ_IMM",
+    [0x4B] = "JLE_IMM",
+    [0x4C] = "JL_IMM",
+    [0x4D] = "JGE_IMM",
+    [0x4E] = "JG_IMM",
 
     [0x50] = "CALL_IMM",
     [0x51] = "CALL_REG",

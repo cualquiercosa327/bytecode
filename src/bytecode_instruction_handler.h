@@ -91,6 +91,10 @@ bytecode_instruction_handler_(exec_op_cmp_reg_reg);
 bytecode_instruction_handler_(exec_op_jmp_imm);
 bytecode_instruction_handler_(exec_op_jnz_imm);
 bytecode_instruction_handler_(exec_op_jz_imm);
+bytecode_instruction_handler_(exec_op_jle_imm);
+bytecode_instruction_handler_(exec_op_jl_imm);
+bytecode_instruction_handler_(exec_op_jge_imm);
+bytecode_instruction_handler_(exec_op_jg_imm);
 
 bytecode_instruction_handler_(exec_op_call_imm);
 bytecode_instruction_handler_(exec_op_call_reg);

@@ -83,7 +83,9 @@ static enum bytecode_register bytecode_call_registers[] =
 
 enum bytecode_flags
 {
-    BYTECODE_FLAG_ZERO = 1 << 0,
+    BYTECODE_FLAG_ZERO     = 1 << 0,
+    BYTECODE_FLAG_SIGN     = 1 << 1,
+    BYTECODE_FLAG_OVERFLOW = 1 << 2,
 };
 
 struct bytecode_runner
@@ -126,13 +128,15 @@ struct bytecode_result
 struct bytecode_instruction;
 struct bytecode_executable;
 
+#define bytecode_flag_isset(bcr, flag) (bcr->flags & flag)
+
 void bytecode_runner_init(struct bytecode_runner *bcr, struct bytecode_executable *program);
 void bytecode_runner_destroy(struct bytecode_runner *bcr);
 
 void bytecode_runner_run(struct bytecode_runner *bcr);
 struct bytecode_result bytecode_runner_result(struct bytecode_runner *bcr);
 
-void bytecode_runner_set_zero_flag(struct bytecode_runner *bcr, int value);
+void bytecode_runner_set_flags(struct bytecode_runner *bcr, int64_t x, int64_t y);
 
 void bytecode_runner_print_registers(struct bytecode_runner *bcr);
 void bytecode_runner_print_stack(struct bytecode_runner *bcr);

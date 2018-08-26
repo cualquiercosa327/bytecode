@@ -130,6 +130,10 @@ uint64_t encode_instruction_r2(uint8_t instr, uint8_t r1, uint8_t r2);
 #define jmp_imm(val) encode_instruction(BYTECODE_OPCODE_JMP_IMM), val
 #define jnz_imm(val) encode_instruction(BYTECODE_OPCODE_JNZ_IMM), val
 #define jz_imm(val) encode_instruction(BYTECODE_OPCODE_JZ_IMM), val
+#define jle_imm(val) encode_instruction(BYTECODE_OPCODE_JLE_IMM), val
+#define jl_imm(val) encode_instruction(BYTECODE_OPCODE_JL_IMM), val
+#define jge_imm(val) encode_instruction(BYTECODE_OPCODE_JGE_IMM), val
+#define jg_imm(val) encode_instruction(BYTECODE_OPCODE_JG_IMM), val
 
 #define nop() encode_instruction(BYTECODE_OPCODE_NOP)
 #define halt() encode_instruction(BYTECODE_OPCODE_HALT)

@@ -23,19 +23,19 @@
     switch (bcr->reg_type[reg1]) { \
     case BYTECODE_REGISTER_KIND_I64: { \
         *as_i64_ptr(bcr->reg[reg1]) op as_i64(val); \
-        bytecode_runner_set_zero_flag(bcr, as_i64(bcr->reg[reg1])); \
+        bytecode_runner_set_flags(bcr, as_i64(bcr->reg[reg1]), 0); \
     } break; \
     case BYTECODE_REGISTER_KIND_I32: { \
         *as_i32_ptr(bcr->reg[reg1]) op as_i32(val); \
-        bytecode_runner_set_zero_flag(bcr, as_i32(bcr->reg[reg1])); \
+        bytecode_runner_set_flags(bcr, as_i32(bcr->reg[reg1]), 0); \
     } break; \
     case BYTECODE_REGISTER_KIND_I16: { \
         *as_i16_ptr(bcr->reg[reg1]) op as_i16(val); \
-        bytecode_runner_set_zero_flag(bcr, as_i16(bcr->reg[reg1])); \
+        bytecode_runner_set_flags(bcr, as_i16(bcr->reg[reg1]), 0); \
     } break; \
     case BYTECODE_REGISTER_KIND_I8: { \
         *as_i8_ptr(bcr->reg[reg1]) op as_i8(val); \
-        bytecode_runner_set_zero_flag(bcr, as_i8(bcr->reg[reg1])); \
+        bytecode_runner_set_flags(bcr, as_i8(bcr->reg[reg1]), 0); \
     } break; \
     } \
     } while (0)
@@ -44,19 +44,19 @@
     switch (bcr->reg_type[reg1]) { \
     case BYTECODE_REGISTER_KIND_I64: { \
         *as_i64_ptr(bcr->reg[reg1]) op as_i64(val); \
-        bytecode_runner_set_zero_flag(bcr, as_i64(bcr->reg[reg1])); \
+        bytecode_runner_set_flags(bcr, as_i64(bcr->reg[reg1]), 0); \
     } break; \
     case BYTECODE_REGISTER_KIND_I32: { \
         *as_i32_ptr(bcr->reg[reg1]) op as_i32(val); \
-        bytecode_runner_set_zero_flag(bcr, as_i32(bcr->reg[reg1])); \
+        bytecode_runner_set_flags(bcr, as_i32(bcr->reg[reg1]), 0); \
     } break; \
     case BYTECODE_REGISTER_KIND_I16: { \
         *as_i16_ptr(bcr->reg[reg1]) op as_i16(val); \
-        bytecode_runner_set_zero_flag(bcr, as_i16(bcr->reg[reg1])); \
+        bytecode_runner_set_flags(bcr, as_i16(bcr->reg[reg1]), 0); \
     } break; \
     case BYTECODE_REGISTER_KIND_I8: { \
         *as_i8_ptr(bcr->reg[reg1]) op as_i8(val); \
-        bytecode_runner_set_zero_flag(bcr, as_i8(bcr->reg[reg1])); \
+        bytecode_runner_set_flags(bcr, as_i8(bcr->reg[reg1]), 0); \
     } break; \
     case BYTECODE_REGISTER_KIND_F64: { \
         *as_f64_ptr(bcr->reg[reg1]) op as_f64(val); \
@@ -222,6 +222,10 @@ static bytecode_instruction_handler *instruction_handlers[BYTECODE_OPCODE_COUNT]
     [BYTECODE_OPCODE_JMP_IMM]            = exec_op_jmp_imm,
     [BYTECODE_OPCODE_JNZ_IMM]            = exec_op_jnz_imm,
     [BYTECODE_OPCODE_JZ_IMM]             = exec_op_jz_imm,
+    [BYTECODE_OPCODE_JLE_IMM]            = exec_op_jle_imm,
+    [BYTECODE_OPCODE_JL_IMM]             = exec_op_jl_imm,
+    [BYTECODE_OPCODE_JGE_IMM]            = exec_op_jge_imm,
+    [BYTECODE_OPCODE_JG_IMM]             = exec_op_jg_imm,
 
     [BYTECODE_OPCODE_CALL_IMM]           = exec_op_call_imm,
     [BYTECODE_OPCODE_CALL_REG]           = exec_op_call_reg,
@@ -507,25 +511,25 @@ bytecode_instruction_handler_(exec_op_add_int8_reg_imm)
 {
     uint64_t raw = fetch_instruction(bcr);
     *as_i8_ptr(bcr->reg[reg1]) += as_i8(raw);
-    bytecode_runner_set_zero_flag(bcr, as_i8(bcr->reg[reg1]));
+    bytecode_runner_set_flags(bcr, as_i8(bcr->reg[reg1]), 0);
 }
 bytecode_instruction_handler_(exec_op_add_int16_reg_imm)
 {
     uint64_t raw = fetch_instruction(bcr);
     *as_i16_ptr(bcr->reg[reg1]) += as_i16(raw);
-    bytecode_runner_set_zero_flag(bcr, as_i16(bcr->reg[reg1]));
+    bytecode_runner_set_flags(bcr, as_i16(bcr->reg[reg1]), 0);
 }
 bytecode_instruction_handler_(exec_op_add_int32_reg_imm)
 {
     uint64_t raw = fetch_instruction(bcr);
     *as_i32_ptr(bcr->reg[reg1]) += as_i32(raw);
-    bytecode_runner_set_zero_flag(bcr, as_i32(bcr->reg[reg1]));
+    bytecode_runner_set_flags(bcr, as_i32(bcr->reg[reg1]), 0);
 }
 bytecode_instruction_handler_(exec_op_add_int64_reg_imm)
 {
     uint64_t raw = fetch_instruction(bcr);
     *as_i64_ptr(bcr->reg[reg1]) += as_i64(raw);
-    bytecode_runner_set_zero_flag(bcr, as_i64(bcr->reg[reg1]));
+    bytecode_runner_set_flags(bcr, as_i64(bcr->reg[reg1]), 0);
 }
 bytecode_instruction_handler_(exec_op_add_flt32_reg_imm)
 {
@@ -547,25 +551,25 @@ bytecode_instruction_handler_(exec_op_sub_int8_reg_imm)
 {
     uint64_t raw = fetch_instruction(bcr);
     *as_i8_ptr(bcr->reg[reg1]) -= as_i8(raw);
-    bytecode_runner_set_zero_flag(bcr, as_i8(bcr->reg[reg1]));
+    bytecode_runner_set_flags(bcr, as_i8(bcr->reg[reg1]), 0);
 }
 bytecode_instruction_handler_(exec_op_sub_int16_reg_imm)
 {
     uint64_t raw = fetch_instruction(bcr);
     *as_i16_ptr(bcr->reg[reg1]) -= as_i16(raw);
-    bytecode_runner_set_zero_flag(bcr, as_i16(bcr->reg[reg1]));
+    bytecode_runner_set_flags(bcr, as_i16(bcr->reg[reg1]), 0);
 }
 bytecode_instruction_handler_(exec_op_sub_int32_reg_imm)
 {
     uint64_t raw = fetch_instruction(bcr);
     *as_i32_ptr(bcr->reg[reg1]) -= as_i32(raw);
-    bytecode_runner_set_zero_flag(bcr, as_i32(bcr->reg[reg1]));
+    bytecode_runner_set_flags(bcr, as_i32(bcr->reg[reg1]), 0);
 }
 bytecode_instruction_handler_(exec_op_sub_int64_reg_imm)
 {
     uint64_t raw = fetch_instruction(bcr);
     *as_i64_ptr(bcr->reg[reg1]) -= as_i64(raw);
-    bytecode_runner_set_zero_flag(bcr, as_i64(bcr->reg[reg1]));
+    bytecode_runner_set_flags(bcr, as_i64(bcr->reg[reg1]), 0);
 }
 bytecode_instruction_handler_(exec_op_sub_flt32_reg_imm)
 {
@@ -587,25 +591,25 @@ bytecode_instruction_handler_(exec_op_mul_int8_reg_imm)
 {
     uint64_t raw = fetch_instruction(bcr);
     *as_i8_ptr(bcr->reg[reg1]) *= as_i8(raw);
-    bytecode_runner_set_zero_flag(bcr, as_i8(bcr->reg[reg1]));
+    bytecode_runner_set_flags(bcr, as_i8(bcr->reg[reg1]), 0);
 }
 bytecode_instruction_handler_(exec_op_mul_int16_reg_imm)
 {
     uint64_t raw = fetch_instruction(bcr);
     *as_i16_ptr(bcr->reg[reg1]) *= as_i16(raw);
-    bytecode_runner_set_zero_flag(bcr, as_i16(bcr->reg[reg1]));
+    bytecode_runner_set_flags(bcr, as_i16(bcr->reg[reg1]), 0);
 }
 bytecode_instruction_handler_(exec_op_mul_int32_reg_imm)
 {
     uint64_t raw = fetch_instruction(bcr);
     *as_i32_ptr(bcr->reg[reg1]) *= as_i32(raw);
-    bytecode_runner_set_zero_flag(bcr, as_i32(bcr->reg[reg1]));
+    bytecode_runner_set_flags(bcr, as_i32(bcr->reg[reg1]), 0);
 }
 bytecode_instruction_handler_(exec_op_mul_int64_reg_imm)
 {
     uint64_t raw = fetch_instruction(bcr);
     *as_i64_ptr(bcr->reg[reg1]) *= as_i64(raw);
-    bytecode_runner_set_zero_flag(bcr, as_i64(bcr->reg[reg1]));
+    bytecode_runner_set_flags(bcr, as_i64(bcr->reg[reg1]), 0);
 }
 bytecode_instruction_handler_(exec_op_mul_flt32_reg_imm)
 {
@@ -689,20 +693,20 @@ bytecode_instruction_handler_(exec_op_xor_reg_reg)
 bytecode_instruction_handler_(exec_op_test_reg_imm)
 {
     uint64_t raw = fetch_instruction(bcr);
-    bytecode_runner_set_zero_flag(bcr, (bcr->reg[reg1] & as_i64(raw)));
+    bytecode_runner_set_flags(bcr, (bcr->reg[reg1] & as_i64(raw)), 0);
 }
 bytecode_instruction_handler_(exec_op_test_reg_reg)
 {
-    bytecode_runner_set_zero_flag(bcr, (bcr->reg[reg1] & bcr->reg[reg2]));
+    bytecode_runner_set_flags(bcr, (bcr->reg[reg1] & bcr->reg[reg2]), 0);
 }
 bytecode_instruction_handler_(exec_op_cmp_reg_imm)
 {
     uint64_t raw = fetch_instruction(bcr);
-    bytecode_runner_set_zero_flag(bcr, bcr->reg[reg1] - as_i64(raw));
+    bytecode_runner_set_flags(bcr, bcr->reg[reg1], as_i64(raw));
 }
 bytecode_instruction_handler_(exec_op_cmp_reg_reg)
 {
-    bytecode_runner_set_zero_flag(bcr, bcr->reg[reg1] - bcr->reg[reg2]);
+    bytecode_runner_set_flags(bcr, bcr->reg[reg1], bcr->reg[reg2]);
 }
 bytecode_instruction_handler_(exec_op_jmp_imm)
 {
@@ -720,6 +724,40 @@ bytecode_instruction_handler_(exec_op_jz_imm)
 {
     uint64_t raw = fetch_instruction(bcr);
     if ((bcr->flags & BYTECODE_FLAG_ZERO)) {
+        *as_i64_ptr(bcr->reg[BYTECODE_REGISTER_RIP]) = as_i64(raw);
+    }
+}
+bytecode_instruction_handler_(exec_op_jle_imm)
+{
+    uint64_t raw = fetch_instruction(bcr);
+    if ((bytecode_flag_isset(bcr, BYTECODE_FLAG_ZERO)) ||
+        (bytecode_flag_isset(bcr, BYTECODE_FLAG_SIGN) !=
+         bytecode_flag_isset(bcr, BYTECODE_FLAG_OVERFLOW))) {
+        *as_i64_ptr(bcr->reg[BYTECODE_REGISTER_RIP]) = as_i64(raw);
+    }
+}
+bytecode_instruction_handler_(exec_op_jl_imm)
+{
+    uint64_t raw = fetch_instruction(bcr);
+    if (bytecode_flag_isset(bcr, BYTECODE_FLAG_SIGN) !=
+        bytecode_flag_isset(bcr, BYTECODE_FLAG_OVERFLOW)) {
+        *as_i64_ptr(bcr->reg[BYTECODE_REGISTER_RIP]) = as_i64(raw);
+    }
+}
+bytecode_instruction_handler_(exec_op_jge_imm)
+{
+    uint64_t raw = fetch_instruction(bcr);
+    if (bytecode_flag_isset(bcr, BYTECODE_FLAG_SIGN) ==
+        bytecode_flag_isset(bcr, BYTECODE_FLAG_OVERFLOW)) {
+        *as_i64_ptr(bcr->reg[BYTECODE_REGISTER_RIP]) = as_i64(raw);
+    }
+}
+bytecode_instruction_handler_(exec_op_jg_imm)
+{
+    uint64_t raw = fetch_instruction(bcr);
+    if (!(bytecode_flag_isset(bcr, BYTECODE_FLAG_ZERO)) &&
+         (bytecode_flag_isset(bcr, BYTECODE_FLAG_SIGN) ==
+          bytecode_flag_isset(bcr, BYTECODE_FLAG_OVERFLOW))) {
         *as_i64_ptr(bcr->reg[BYTECODE_REGISTER_RIP]) = as_i64(raw);
     }
 }
