@@ -53,7 +53,7 @@ int main(int argc, char **argv)
         push_reg(BYTECODE_REGISTER_R10),
         mov_reg_reg(BYTECODE_REGISTER_R10, BYTECODE_REGISTER_RDI),
         cmp_reg_imm(BYTECODE_REGISTER_R10, 1),
-        jnz_imm(38),
+        jz_imm(38),
         sub_i8_reg_imm(BYTECODE_REGISTER_RDI, 1),
         call_imm(__fact),
         mul_reg_reg(BYTECODE_REGISTER_R10, BYTECODE_REGISTER_RAX),

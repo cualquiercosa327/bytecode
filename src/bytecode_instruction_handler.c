@@ -712,14 +712,14 @@ bytecode_instruction_handler_(exec_op_jmp_imm)
 bytecode_instruction_handler_(exec_op_jnz_imm)
 {
     uint64_t raw = fetch_instruction(bcr);
-    if ((bcr->flags & BYTECODE_FLAG_ZERO)) {
+    if (!(bcr->flags & BYTECODE_FLAG_ZERO)) {
         *as_i64_ptr(bcr->reg[BYTECODE_REGISTER_RIP]) = as_i64(raw);
     }
 }
 bytecode_instruction_handler_(exec_op_jz_imm)
 {
     uint64_t raw = fetch_instruction(bcr);
-    if (!(bcr->flags & BYTECODE_FLAG_ZERO)) {
+    if ((bcr->flags & BYTECODE_FLAG_ZERO)) {
         *as_i64_ptr(bcr->reg[BYTECODE_REGISTER_RIP]) = as_i64(raw);
     }
 }
