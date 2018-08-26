@@ -73,6 +73,7 @@ enum bytecode_opcode
     BYTECODE_OPCODE_DIV_FLT64_REG_IMM  = 0x3C,
     BYTECODE_OPCODE_DIV_REG_REG        = 0x3D,
 
+    BYTECODE_OPCODE_NOT_REG            = 0x3E,
     BYTECODE_OPCODE_NEG_REG            = 0x40,
     BYTECODE_OPCODE_INC_REG            = 0x41,
     BYTECODE_OPCODE_DEC_REG            = 0x42,
@@ -190,6 +191,7 @@ static const char *bytecode_opcode_str[BYTECODE_OPCODE_COUNT] =
     [0x3C] = "DIV_FLT64_REG_IMM",
     [0x3D] = "DIV_REG_REG",
 
+    [0x3E] = "NOT_REG",
     [0x40] = "NEG_REG",
     [0x41] = "INC_REG",
     [0x42] = "DEC_REG",
