@@ -20,7 +20,7 @@
 
 void bytecode_runner_init(struct bytecode_runner *bcr, struct bytecode_executable *program)
 {
-    bcr->flags = 0;
+    bcr->compare = 0;
     bcr->cycle_count = 0;
 
     bcr->text = program->text_segment;
@@ -50,7 +50,6 @@ void bytecode_runner_run(struct bytecode_runner *bcr)
     bcr->is_running = true;
     while (bcr->is_running) {
         bytecode_runner_print_registers(bcr);
-        bytecode_runner_print_flags(bcr);
         bytecode_runner_print_stack(bcr);
 
         uint64_t raw_instr = fetch_instruction(bcr);
@@ -73,29 +72,6 @@ void bytecode_runner_run(struct bytecode_runner *bcr)
     clock_t timed_block_end = clock();
     double timed_block_elapsed = ((timed_block_end - timed_block_begin) / (double)CLOCKS_PER_SEC) * 1000.0f;
     printf("program exited after: %.4fms\n", timed_block_elapsed);
-}
-
-void bytecode_runner_set_flags(struct bytecode_runner *bcr, int64_t x, int64_t y)
-{
-    int64_t value = y - x;
-
-    if ((y > 0 && x > INT64_MAX - y) || (y < 0 && x < INT64_MIN - y)) {
-        bcr->flags |= BYTECODE_FLAG_OVERFLOW;
-    } else {
-        bcr->flags &= ~BYTECODE_FLAG_OVERFLOW;
-    }
-
-    if (value == 0) {
-        bcr->flags |= BYTECODE_FLAG_ZERO;
-    } else {
-        bcr->flags &= ~BYTECODE_FLAG_ZERO;
-    }
-
-    if (value & 0xf) {
-        bcr->flags |= BYTECODE_FLAG_SIGN;
-    } else {
-        bcr->flags &= ~BYTECODE_FLAG_SIGN;
-    }
 }
 
 struct bytecode_result bytecode_runner_result(struct bytecode_runner *bcr)
@@ -138,22 +114,13 @@ void bytecode_runner_print_stack(struct bytecode_runner *bcr)
 {
     if (!bcr->verbose) return;
 
+    printf("compare: %d\n", bcr->compare);
+
     printf("stack [ ");
     for (int i = 0; i < bcr->reg[BYTECODE_REGISTER_RSP]; ++i) {
         printf("%0X ", bcr->stack[i]);
     }
     printf("]\n");
-}
-
-void bytecode_runner_print_flags(struct bytecode_runner *bcr)
-{
-    if (!bcr->verbose) return;
-
-    printf("%8s\n", "osz");
-    for (int bit = 7; bit >= 0; --bit) {
-        printf("%c", ((bcr->flags & (1 << bit)) != 0) ? '1' : '0');
-    }
-    printf("\n");
 }
 
 void bytecode_runner_print_instruction(struct bytecode_runner *bcr, struct bytecode_instruction *instr)
