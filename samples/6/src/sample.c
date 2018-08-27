@@ -37,7 +37,7 @@ int main(int argc, char **argv)
         call_reg(BYTECODE_REGISTER_RAX),
         halt(),
         begin_call_frame(),
-        mov_i8_reg_imm(BYTECODE_REGISTER_R10, 1),
+        mov_i64_reg_imm(BYTECODE_REGISTER_R10, 1),
         cmp_reg_imm(BYTECODE_REGISTER_R10, 11),
         jz_imm(30),
         mov_reg_reg(BYTECODE_REGISTER_RDI, BYTECODE_REGISTER_R10),
@@ -70,8 +70,8 @@ int main(int argc, char **argv)
         add_reg_reg(BYTECODE_REGISTER_R12, BYTECODE_REGISTER_RAX),
         mov_reg_reg(BYTECODE_REGISTER_R11, BYTECODE_REGISTER_R12),
         mov_reg_reg(BYTECODE_REGISTER_RAX, BYTECODE_REGISTER_R11),
-        pop_i8_reg(BYTECODE_REGISTER_R12),
-        pop_i8_reg(BYTECODE_REGISTER_R11),
+        pop_i64_reg(BYTECODE_REGISTER_R12),
+        pop_i64_reg(BYTECODE_REGISTER_R11),
         end_call_frame(),
         ret()
     };
