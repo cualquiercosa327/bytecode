@@ -805,21 +805,27 @@ bytecode_instruction_handler_(exec_op_call_foreign)
     switch (ret_kind) {
     case BYTECODE_REGISTER_KIND_I64: {
         *as_i64_ptr(bcr->reg[BYTECODE_REGISTER_RAX]) = dcCallLongLong(vm, func);
+        bcr->reg_type[BYTECODE_REGISTER_RAX] = BYTECODE_REGISTER_KIND_I64;
     } break;
     case BYTECODE_REGISTER_KIND_I32: {
         *as_i32_ptr(bcr->reg[BYTECODE_REGISTER_RAX]) = dcCallInt(vm, func);
+        bcr->reg_type[BYTECODE_REGISTER_RAX] = BYTECODE_REGISTER_KIND_I32;
     } break;
     case BYTECODE_REGISTER_KIND_I16: {
         *as_i16_ptr(bcr->reg[BYTECODE_REGISTER_RAX]) = dcCallShort(vm, func);
+        bcr->reg_type[BYTECODE_REGISTER_RAX] = BYTECODE_REGISTER_KIND_I16;
     } break;
     case BYTECODE_REGISTER_KIND_I8: {
         *as_i8_ptr(bcr->reg[BYTECODE_REGISTER_RAX]) = dcCallChar(vm, func);
+        bcr->reg_type[BYTECODE_REGISTER_RAX] = BYTECODE_REGISTER_KIND_I8;
     } break;
     case BYTECODE_REGISTER_KIND_F64: {
         *as_f64_ptr(bcr->reg[BYTECODE_REGISTER_RAX]) = dcCallDouble(vm, func);
+        bcr->reg_type[BYTECODE_REGISTER_RAX] = BYTECODE_REGISTER_KIND_F64;
     } break;
     case BYTECODE_REGISTER_KIND_F32: {
         *as_f32_ptr(bcr->reg[BYTECODE_REGISTER_RAX]) = dcCallFloat(vm, func);
+        bcr->reg_type[BYTECODE_REGISTER_RAX] = BYTECODE_REGISTER_KIND_F32;
     } break;
     //case BYTECODE_VALUE_POINTER: {
         //*as_i64_ptr(bcr->reg[BYTECODE_REGISTER_RAX]) = (uint64_t)dcCallPointer(vm, func);
