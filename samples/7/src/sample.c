@@ -76,7 +76,7 @@ int main(int argc, char **argv)
      * }
 
      * main :: () {
-     *     for i := 1; i <= 10; i += 1 {
+     *     for i := 1; i <= 40; i += 1 {
      *         printf("the %2d'th fibonacci number is %2d\n", i, fib(i));
      *     }
      * }
