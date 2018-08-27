@@ -38,8 +38,8 @@ int main(int argc, char **argv)
         halt(),
         begin_call_frame(),
         mov_i64_reg_imm(BYTECODE_REGISTER_R10, 1),
-        cmp_reg_imm(BYTECODE_REGISTER_R10, 11),
-        jz_imm(30),
+        cmp_reg_imm(BYTECODE_REGISTER_R10, 40),
+        jg_imm(30),
         mov_reg_reg(BYTECODE_REGISTER_RDI, BYTECODE_REGISTER_R10),
         call_imm(__fib),
         lea_bss_reg_imm(BYTECODE_REGISTER_RDI, 0),
@@ -79,7 +79,7 @@ int main(int argc, char **argv)
     struct bytecode_header program_header = {
         .magic = { 'b', 'c', 'r' },
         .abi_version = 0x1,
-        .stack_size = 100000,
+        .stack_size = 2048,
         .data_size = sizeof(program_data),
         .text_size = sizeof(program_text)
     };
