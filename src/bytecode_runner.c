@@ -43,7 +43,7 @@ void bytecode_runner_destroy(struct bytecode_runner *bcr)
     memset(bcr, 0, sizeof(struct bytecode_runner));
 }
 
-void bytecode_runner_run(struct bytecode_runner *bcr)
+struct bytecode_result bytecode_runner_run(struct bytecode_runner *bcr)
 {
     clock_t timed_block_begin = clock();
 
@@ -72,10 +72,7 @@ void bytecode_runner_run(struct bytecode_runner *bcr)
     clock_t timed_block_end = clock();
     double timed_block_elapsed = ((timed_block_end - timed_block_begin) / (double)CLOCKS_PER_SEC) * 1000.0f;
     printf("program exited after: %.4fms\n", timed_block_elapsed);
-}
 
-struct bytecode_result bytecode_runner_result(struct bytecode_runner *bcr)
-{
     struct bytecode_result result = {
         .kind = bcr->reg_type[BYTECODE_REGISTER_RAX],
         .i64 = bcr->reg[BYTECODE_REGISTER_RAX]
@@ -173,8 +170,7 @@ int main(int argc, char **argv)
     struct bytecode_executable executable;
     if (bytecode_load_executable(exe_path, &executable)) {
         bytecode_runner_init(&bcr, &executable);
-        bytecode_runner_run(&bcr);
-        struct bytecode_result result = bytecode_runner_result(&bcr);
+        struct bytecode_result result = bytecode_runner_run(&bcr);
         bytecode_runner_destroy(&bcr);
         return result.i32;
     }

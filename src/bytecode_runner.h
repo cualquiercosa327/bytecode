@@ -122,10 +122,8 @@ struct bytecode_instruction;
 struct bytecode_executable;
 
 void bytecode_runner_init(struct bytecode_runner *bcr, struct bytecode_executable *program);
+struct bytecode_result bytecode_runner_run(struct bytecode_runner *bcr);
 void bytecode_runner_destroy(struct bytecode_runner *bcr);
-
-void bytecode_runner_run(struct bytecode_runner *bcr);
-struct bytecode_result bytecode_runner_result(struct bytecode_runner *bcr);
 
 void bytecode_runner_print_registers(struct bytecode_runner *bcr);
 void bytecode_runner_print_stack(struct bytecode_runner *bcr);
