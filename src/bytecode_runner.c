@@ -113,9 +113,17 @@ void bytecode_runner_print_stack(struct bytecode_runner *bcr)
 
     printf("compare: %d\n", bcr->compare);
 
-    printf("stack [ ");
+    printf("stack [\n");
     for (int i = 0; i < bcr->reg[BYTECODE_REGISTER_RSP]; ++i) {
-        printf("%0X ", bcr->stack[i]);
+        printf("%.2X ", (unsigned char)bcr->stack[i]);
+
+        if (((i+1) % 4) == 0) {
+            printf("  ");
+        }
+
+        if (((i+1) % 20) == 0) {
+            printf("\n");
+        }
     }
     printf("]\n");
 }
@@ -124,21 +132,24 @@ void bytecode_runner_print_instruction(struct bytecode_runner *bcr, struct bytec
 {
     if (!bcr->verbose) return;
 
-    printf("cycle %3" PRIu64 ": op = %-15s r1 = %s, r2 = %s\n",
+    printf("cycle %3" PRIu64 ": op = %-15s r1 = %s, r2 = %s, imm = %" PRIu64 "\n",
             ++bcr->cycle_count,
             bytecode_opcode_str[instr->op],
             bytecode_register_str[instr->r1],
-            bytecode_register_str[instr->r2]);
+            bytecode_register_str[instr->r2],
+            bcr->text[bcr->reg[BYTECODE_REGISTER_RIP]]);
 }
 
 static int bcr_sample_exe = 1;
+static const char *program;
 void parse_arguments(int argc, char **argv, struct bytecode_runner *bcr)
 {
-    const char *short_opt = "vds:";
+    const char *short_opt = "vds:p:";
     struct option long_opt[] = {
         { "verbose", no_argument, NULL, 'v' },
         { "debug", no_argument, NULL, 'd' },
         { "sample", required_argument, NULL, 's' },
+        { "program", required_argument, NULL, 'p' },
         { NULL, 0, NULL, 0 }
     };
 
@@ -155,6 +166,9 @@ void parse_arguments(int argc, char **argv, struct bytecode_runner *bcr)
         case 's': {
             sscanf(optarg, "%d", &bcr_sample_exe);
         } break;
+        case 'p': {
+            program = strdup(optarg);
+        }
         }
     }
 }
@@ -165,7 +179,12 @@ int main(int argc, char **argv)
     parse_arguments(argc, argv, &bcr);
 
     char exe_path[255] = {};
-    snprintf(exe_path, sizeof(exe_path), "./samples/%d/sample.bcr", bcr_sample_exe);
+    if (program == NULL) {
+        snprintf(exe_path, sizeof(exe_path), "./samples/%d/sample.bcr", bcr_sample_exe);
+    } else {
+        printf("loading program '%s'..\n", program);
+        memcpy(exe_path, program, strlen(program)+1);
+    }
 
     struct bytecode_executable executable;
     if (bytecode_load_executable(exe_path, &executable)) {
