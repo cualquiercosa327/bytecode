@@ -526,31 +526,37 @@ bytecode_instruction_handler_(exec_op_pop_reg)
 }
 bytecode_instruction_handler_(exec_op_pop_int8_reg)
 {
+    assert(0);
     assert(bcr->reg[BYTECODE_REGISTER_RSP] > 0);
     bytecode_pop_reg(reg1, BYTECODE_REGISTER_KIND_I8);
 }
 bytecode_instruction_handler_(exec_op_pop_int16_reg)
 {
+    assert(0);
     assert(bcr->reg[BYTECODE_REGISTER_RSP] > 0);
     bytecode_pop_reg(reg1, BYTECODE_REGISTER_KIND_I16);
 }
 bytecode_instruction_handler_(exec_op_pop_int32_reg)
 {
+    assert(0);
     assert(bcr->reg[BYTECODE_REGISTER_RSP] > 0);
     bytecode_pop_reg(reg1, BYTECODE_REGISTER_KIND_I32);
 }
 bytecode_instruction_handler_(exec_op_pop_int64_reg)
 {
+    assert(0);
     assert(bcr->reg[BYTECODE_REGISTER_RSP] > 0);
     bytecode_pop_reg(reg1, BYTECODE_REGISTER_KIND_I64);
 }
 bytecode_instruction_handler_(exec_op_pop_flt32_reg)
 {
+    assert(0);
     assert(bcr->reg[BYTECODE_REGISTER_RSP] > 0);
     bytecode_pop_reg(reg1, BYTECODE_REGISTER_KIND_F32);
 }
 bytecode_instruction_handler_(exec_op_pop_flt64_reg)
 {
+    assert(0);
     assert(bcr->reg[BYTECODE_REGISTER_RSP] > 0);
     bytecode_pop_reg(reg1, BYTECODE_REGISTER_KIND_F64);
 }
@@ -906,12 +912,12 @@ bytecode_instruction_handler_(exec_op_end_call_frame)
 {
     *as_i64_ptr(bcr->reg[BYTECODE_REGISTER_RSP]) = as_i64(bcr->reg[BYTECODE_REGISTER_RBP]);
     bcr->reg_type[BYTECODE_REGISTER_RSP] = bcr->reg_type[BYTECODE_REGISTER_RBP];
-    bytecode_pop_reg(BYTECODE_REGISTER_RBP, BYTECODE_REGISTER_KIND_I64);
+    bytecode_pop_reg1(BYTECODE_REGISTER_RBP);
 }
 
 bytecode_instruction_handler_(exec_op_return)
 {
-    bytecode_pop_reg(BYTECODE_REGISTER_RIP, BYTECODE_REGISTER_KIND_I64);
+    bytecode_pop_reg1(BYTECODE_REGISTER_RIP);
 }
 
 bytecode_instruction_handler_(exec_op_lea_lcl_reg_imm)
