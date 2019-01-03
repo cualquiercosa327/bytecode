@@ -990,7 +990,7 @@ bytecode_instruction_handler_(exec_op_call_foreign)
     uint64_t ret_kind = fetch_instruction(bcr);
     bcr->reg_type[BYTECODE_REGISTER_RAX] = ret_kind;
 
-    DCCallVM *vm = dcNewCallVM(8192);
+    DCCallVM *vm = dcNewCallVM(4096);
     dcMode(vm, DC_CALL_C_DEFAULT);
     dcReset(vm);
 
