@@ -1,4 +1,4 @@
-FRAMEWORKS     = -I/opt/local/include -L/opt/local/lib -ldl -ldyncall_s
+FRAMEWORKS     = -I/opt/local/include -L/opt/local/lib -ldl -lffi
 BUILD_PATH     = ./bin
 BUILD_FLAGS    = -std=c99 -Wall -g -O0
 SRC            = ./src/bytecode_runner.c
